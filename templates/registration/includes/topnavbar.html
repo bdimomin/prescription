@@ -1,0 +1,28 @@
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+  <!-- Navbar Brand-->
+  <a class="navbar-brand ps-3" href="{% url 'index' %}">The Diary</a>
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      {% if user.is_authenticated %}
+        
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+      </li>
+
+      {% else %}
+      
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'login_user' %}">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'registration' %}">Registration</a>
+      </li>
+
+      {% endif %}
+      
+    </ul>
+  </div>
+  
+</nav>

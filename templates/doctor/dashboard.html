@@ -1,0 +1,322 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title> Prescription</title>
+ 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"/>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css'%}" />
+
+  </head>
+  <body>
+    <div class="container-scroller">
+      <div class="row p-0 m-0 proBanner" id="proBanner">
+        <div class="col-md-12 p-0 m-0">
+          
+        </div>
+      </div>
+      <!-- partial:partials/_horizontal-navbar.html -->
+      <div class="horizontal-menu">
+        
+        <nav class="bottom-navbar">
+          <div class="container">
+            <ul class="nav page-navigation">
+             
+              <li class="nav-item">
+                <a href="{% url 'prescription' %}" class="nav-link">
+                  
+                  <span class="menu-title">View Prescriptions</span>
+                 
+                </a>
+               
+              </li>
+              {% comment %} <li class="nav-item">
+                <a class="nav-link" href="pages/forms/basic_elements.html">
+                  
+                  <span class="menu-title">Forms</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="pages/icons/mdi.html">
+                  
+                  <span class="menu-title">Icons</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="pages/charts/chartjs.html">
+                  
+                  <span class="menu-title">Charts</span>
+                </a>
+              </li> {% endcomment %}
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                 
+                  <span class="menu-title">Profile</span>
+                
+                </a>
+                <div class="submenu">
+                  <ul class="submenu-item">
+                    <li class="nav-item">
+                      <a class="nav-link" href="">Edit Profile</a>
+                    </li>
+                  
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'logout' %}">
+                        
+                        <span class="menu-title">Logout</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              
+             
+              
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+
+
+
+
+
+
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="POST">
+                {% csrf_token %}
+            <div class="row">
+                <div class="col-md-2">
+                    {{ request.CustomUser }}
+                    {{prescription.patient_name|as_crispy_field}}
+                </div>
+                <div class="col-md-2">
+                    {{prescription.patient_age|as_crispy_field}}
+                </div>
+                <div class="col-md-2">
+                    {{prescription.patient_sex|as_crispy_field}}
+                </div>
+                <div class="col-md-2">
+                    {{prescription.patient_address|as_crispy_field}}
+                </div>
+                <div class="col-md-2">
+                    {{prescription.patient_mobile|as_crispy_field}}
+                </div>
+                <div class="col-md-2">
+                    {{prescription.patient_weight|as_crispy_field}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    {{prescription.disease|as_crispy_field}}
+                    {{prescription.complaint|as_crispy_field}}
+                    {{prescription.BP|as_crispy_field}}
+                    {{prescription.Pulse|as_crispy_field}}
+                    {{prescription.Temp|as_crispy_field}}
+                    {{prescription.Sp02|as_crispy_field}}
+                    {{prescription.RBS|as_crispy_field}}
+                    {{prescription.Heart|as_crispy_field}}
+                    {{prescription.others|as_crispy_field}}
+                    {{prescription.ix|as_crispy_field}}
+                </div>
+              
+                <div class="col-md-6">
+                  
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Dose</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col">Before/After</th>
+                      </tr>
+                    </thead>
+                   
+                    <tbody id ="tbody">
+                      {% if medicine %}
+                      {% for medi in medicine %}
+                      <tr>
+                        
+                        <td>{{medi.name}}</td>
+                        <td>{{medi.dose}}</td>
+                        <td>{{medi.duration}}  {{medi.day_month}}</td>
+                        <td>{{medi.before_after}} Meal </td>
+                       
+
+
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+                    </tbody>
+                    
+                  </table>
+                    
+                  <button type="submit" class="btn btn-primary btn-lg">Save</button>
+                </form>
+
+                
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="row">
+
+                    <form method="POST" id="medicine_add" name="medicine_add" action="javascript:void(0)">
+
+                       {% csrf_token %}
+                          <div class="form-group">
+                            <input type="hidden" name="patient_id" id="patient_id" value="{{patient_id}}">
+                          </div>
+
+                            <div class="form-group ui-widget">
+                                <input id="medicine_name" class="form-control" name="medicine_name" placeholder="Enter Medicine Name">
+                      
+                            </div>
+                        
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="medicine_dose" name="medicine_dose" placeholder="Enter dose">
+                            </div>
+                       
+                       
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="medicine_duration" name="medicine_duration" placeholder="Enter durtion">
+                            </div>
+                        
+                            <div class="form-group">
+                                <select class="form-control" id="day_month" name="day_month">
+                                    <option>Select</option>
+                                    <option value="day">Day</option>
+                                    <option value="month">Month</option>
+                                </select>
+                            </div>
+                       
+                            <div class="form-group">
+                                <select class="form-control" id="before_after" name="before_after">
+                                    <option>Select</option>
+                                    <option value="before">Before Meal</option>
+                                    <option value="after">After Meal</option>
+                                </select>
+                            </div>
+                        
+                            <input type="submit" class="btn btn-primary" id="add_medicine_button" value="Add Medicine">
+                        
+                    </form>
+                   </div>
+                </div>
+                
+            </div>
+            
+        
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<footer class="footer">
+    <div class="container">
+      <div class="d-sm-flex justify-content-center justify-content-sm-between">
+        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
+        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with </span>
+      </div>
+    </div>
+  </footer>
+  <!-- partial -->
+</div>
+<!-- main-panel ends -->
+</div>
+<!-- page-body-wrapper ends -->
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+
+
+<script>
+    $(function () {
+        $("#medicine_name").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/api/medicine/?search=" + request.term,
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return {
+                                label: item.types +"-" + item.name +" ("+ item.generic_name+" )" + " - " + item. strength
+                            };
+                        }));
+                    }
+                });
+            },
+            select: function (event, ui) {
+                $("#medicine_name").val(ui.item.label);
+                return false;
+            },
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+
+   function onMedicineAddForm(event){
+    output=""
+    const valuesInArray = $(this).serializeArray()
+    const body ={}
+    valuesInArray.forEach(e=>{
+      body[e.name]=e.value
+    })
+
+    $.ajax({
+      method:"POST",
+      url:"{% url 'medicinesave' %}",
+      data:body
+    })
+
+    .done(function(response){
+      medicine = response.medicine_list
+      
+      if(response.status =="save"){
+        console.log("Medicine Added Successfully")
+        
+        //console.log(medicine)
+
+        for (i=0; i<medicine.length;i++){
+          output+="<tr><td>"+ medicine[i].name + "</td><td>" + medicine[i].dose + "</td><td>" + 
+            medicine[i].duration +" "+ medicine[i].day_month+ "</td><td>" +medicine[i].before_after+" meal </td></tr>";      
+          }
+          $("#tbody").html(output);
+          event.target.reset()
+
+      }
+     
+    })
+    .fail(function(response){
+      console.log(response)
+    })
+   }
+
+   $("#medicine_add").submit(onMedicineAddForm)
+
+</script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,116 @@
+{% extends 'doctor/includes/base.html' %}
+{% block title %}Prescription List {% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-md-2">
+      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Generate a Prescription</button>
+    </div>
+    <div class="col-md-8">
+    </div>
+  </div>
+</div>
+<br>
+
+<div class="container prescriptions">
+  <div class="row">
+      <div class="col-md-12">
+          {% if prescriptions %}
+          <table class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Patient ID</th>
+                  <th scope="col">Patient Name</th>
+                  <th scope="col">Patient Age</th>
+                  <th scope="col">Patient Phone</th>
+                  <th scope="col">Patient Address</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              {% for prescription in prescriptions %}
+                <tr>
+                  <th scope="row">{{prescription.id}}</th>
+                  <td>{{prescription.patient_name}}</td>
+                  <td>{{prescription.patient_age}}</td>
+                  <td>{{prescription.patient_mobile}}</td>
+                  <td>{{prescription.patient_address}}</td>
+                  <td><a href="{% url 'prescriptionEdit' prescription.id %}" class="btn btn-warning">Edit</a> <a href="{% url 'oneprescription' prescription.id %}" target="_blank" class="btn btn-primary">Print</a>  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              Today you haven't created any prescription yet.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            {% endif %}
+      </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Prescription</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          {% csrf_token %}
+      <div class="row">
+          <div class="col-md-6">
+              {{ request.CustomUser }}
+              {{prescription.patient_name|as_crispy_field}}
+          </div>
+          <div class="col-md-6">
+              {{prescription.patient_age|as_crispy_field}}
+          </div>
+          <div class="col-md-6">
+              {{prescription.patient_sex|as_crispy_field}}
+          </div>
+          <div class="col-md-6">
+              {{prescription.patient_address|as_crispy_field}}
+          </div>
+          <div class="col-md-6">
+              {{prescription.patient_mobile|as_crispy_field}}
+          </div>
+          <div class="col-md-6">
+              {{prescription.patient_weight|as_crispy_field}}
+             
+          </div>
+          <div class="col-md-2 offset-md-4">
+            <button type="submit" class="btn btn-success btn-lg">Save</button>
+          </div>
+         
+      </div>
+      
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}
+
+

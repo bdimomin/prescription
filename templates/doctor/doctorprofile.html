@@ -1,0 +1,112 @@
+{% extends 'doctor/includes/base.html' %}
+{% block title %}Doctor Profile {% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+<br>
+<br>
+<div class="container">
+    <div class="row">
+      <div class="col-md-2">
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Add Degree</button>
+      </div>
+      <div class="col-md-8">
+      </div>
+    </div>
+  </div>
+  <br>
+  
+  <div class="container prescriptions">
+    <div class="row">
+        <div class="col-md-12">
+            {% if Doctorprofile %}
+            <table class="table">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">SL</th>
+                    <th scope="col">Degree</th>
+                    <th scope="col">Degree Description</th>
+                    <th scope="col">Passing Year</th>
+                    <th scope="col">University</th>
+                    <th scope="col">Country</th>
+                  </tr>
+                </thead>
+                <tbody>
+  
+                {% for degree in Doctorprofile %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{degree.degree}}</td>
+                    <td>{{degree.degree_description}}</td>
+                    <td>{{degree.degree_year}}</td>
+                    <td>{{degree.degree_university}}</td>
+                    <td>{{degree.degree_country}}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+                No Degree Found.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+  
+              {% endif %}
+        </div>
+    </div>
+  </div>
+  
+  
+  
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLabel">Prescription</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST">
+            {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+              {{form.degree|as_crispy_field}}
+            </div>
+            <div class="col-md-6">
+                {{form.degree_description|as_crispy_field}}
+            </div>
+            <div class="col-md-6">
+                {{form.degree_year|as_crispy_field}}
+            </div>
+            <div class="col-md-6">
+                {{form.degree_university|as_crispy_field}}
+            </div>
+            <div class="col-md-6">
+                {{form.degree_country|as_crispy_field}}
+            </div>
+           <div class="col-md-6">
+
+           </div>
+            <div class="col-md-2 offset-md-4">
+              <button type="submit" class="btn btn-success btn-lg">Save</button>
+            </div>
+           
+        </div>
+        
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}

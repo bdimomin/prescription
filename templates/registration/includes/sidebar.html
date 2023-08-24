@@ -1,0 +1,68 @@
+<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+  <div class="sb-sidenav-menu">
+      <div class="nav">
+          <div class="sb-sidenav-menu-heading">Core</div>
+          <a class="nav-link" href="{% url 'dashboard' %}">
+              <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+              Dashboard
+          </a>
+         
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#cases" aria-expanded="false" aria-controls="collapseLayouts">
+              <div class="sb-nav-link-icon"><i class="fa fa-file" aria-hidden="true"></i></div>
+              Cases
+              <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+          </a>
+          <div class="collapse" id="cases" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+              <nav class="sb-sidenav-menu-nested nav">
+                  <a class="nav-link" href="{% url 'create-case' %}">New Case</a>
+                  <a class="nav-link" href="{% url 'all-cases' %}"> All Cases</a>
+              </nav>
+          </div>
+
+
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#clients" aria-expanded="false" aria-controls="collapseLayouts">
+            <div class="sb-nav-link-icon"><i class="fa fa-user" aria-hidden="true"></i></div>
+            Clients
+            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+        </a>
+        <div class="collapse" id="clients" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+            <nav class="sb-sidenav-menu-nested nav">
+                <a class="nav-link" href="#">New Clients</a>
+                <a class="nav-link" href="#">All Clients</a>
+            </nav>
+        </div>
+
+        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#accounts" aria-expanded="false" aria-controls="collapseLayouts">
+            <div class="sb-nav-link-icon"><i class="fa fa-university" aria-hidden="true"></i></div>
+            Accounts
+            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+        </a>
+        <div class="collapse" id="accounts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+            <nav class="sb-sidenav-menu-nested nav">
+                <a class="nav-link" href="#">Statements</a>
+                <a class="nav-link" href="#">Due Bills</a>
+                <a class="nav-link" href="#">Bills and Invoices</a>
+                <a class="nav-link" href="#">Quotations</a>
+            </nav>
+        </div>
+          
+          <a class="nav-link" href="#">
+              <div class="sb-nav-link-icon"><i class="fa fa-building" aria-hidden="true"></i></div>
+              Draftings
+          </a>
+          <a class="nav-link" href="#">
+              <div class="sb-nav-link-icon"><i class="fa fa-calculator" aria-hidden="true"></i></div>
+              Lawyer Calculator
+          </a>
+
+          <a class="nav-link" href="#">
+            <div class="sb-nav-link-icon"><i class="fa fa-link" aria-hidden="true"></i></div>
+            Important Links
+        </a>
+      </div>
+  </div>
+  <div class="sb-sidenav-footer">
+      <div class="small">Logged in as:</div>
+      {{user.name}}
+  </div>
+</nav>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Prescription</title>
+    <style>
+      
+        
+        body {
+            font-size:11pt;
+            line-height:13pt;
+            font-family:Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif;
+        }
+        table.table-bordered, table.table-bordered>thead>tr>th, table.table-bordered>tbody>tr>td {
+            border-top-width: 1pt;
+            border-top-style: solid;
+            border-top-color: #000000;
+            border-bottom-width: 1pt;
+            border-bottom-style: solid;
+            border-bottom-color: #000000;
+            border-left-width: 1pt;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-width: 1pt;
+            border-right-style: solid;
+            border-right-color: #000000;
+            padding-top: 10pt;
+            padding-right: 10pt;
+            padding-bottom: 10pt;
+            padding-left: 10pt;
+        }
+        .border-top {
+            border-top-width: 1pt;
+            border-top-style: solid;
+            border-top-color: #000000;
+        }
+        td th table {
+            width: 100%;
+            vertical-align: center;
+            text-align:center;
+        }
+        table {
+            margin-top:auto;
+            margin-right:auto;
+            margin-bottom:auto;
+            margin-left:auto;
+            display:block;
+        }
+        .alignleft{
+          width:100pt;
+          float:left;
+          display: block;
+        }
+        .alignright{
+          width: 100pt;
+          float:right;
+          display: block;
+        }
+        
+        .alignedcenter {
+           text-align:center;
+          }
+
+        .ix{
+          background-color #030303;
+        }
+
+        {% comment %} @page {
+          size: letter ;
+          
+          @frame col1_frame {             /* Content frame 1 */
+              left: 44pt; width: 245pt; top: 90pt; height: 632pt;
+          }
+          @frame col2_frame {             /* Content frame 2 */
+              left: 323pt; width: 245pt; top: 90pt; height: 632pt;
+          }
+         
+      } {% endcomment %}
+    </style>
+</head>
+<body>
+   <div class="container ml-5">
+    <div class="row">
+      <h1 class="text-center alignedcenter">Medicial Prescription</h1>
+
+        <div class="col-md-2"> 
+          <p>Doctor Name: {{doctor.name}}</p>
+          <p>MBBS (DU), FCPC (PG), MD ( Cardiology, USA)</p>
+        </div>
+
+        <div class="col-md-2" >
+          {% if prescriptions.barcode %}
+          <img src="{{prescriptions.barcode.path}}" alt="barcode" height="80px" align="right">
+          {% endif %}
+        </div>
+    </div>
+    <hr>
+    <p class="alignedcenter">Patient ID: <strong>{{prescriptions.id}}</strong>,  Patient Name: <strong>{{prescriptions.patient_name}}</strong>,
+      Age: <strong>{{prescriptions.patient_age}}</strong>, Sex: <strong>{{prescriptions.patient_sex}}</strong>, Phone: <strong>{{prescriptions.patient_mobile}}</strong></p>
+    <hr>
+    <div class="row">
+      <div class="col-md-4 alignleft">
+
+        <p align="right">Date: {{prescriptions.created_date}}</p>
+
+        <h4> Disease</h4>
+        {{prescriptions.disease}}
+
+        <br>
+        <br>
+        <br>
+
+        <h4> Complaint</h4>
+
+
+        {{prescriptions.complaint}}
+
+        <br>
+        <br>
+        <br>
+
+
+        <h3>Investigations</h3>
+        <p>BP: {{prescriptions.BP}}</p>
+        <p>Pulse: {{prescriptions.Pulse}}</p>
+        <p>Temp: {{prescriptions.Temp}}</p>
+        <p>Sp02: {{prescriptions.Sp02}}</p>
+        <p>RBS: {{prescriptions.RBS}}</p>
+        <p>Heart: {{prescriptions.Heart}}</p>
+        <p>Others: {{prescriptions.others}}</p>
+
+        <br>
+
+        <h4> IX</h4>
+        <p>{{prescriptions.ix}}</p>
+        
+       
+
+      </div>
+      <div class="col-md-6">
+        <div class="col-md-8 alignright">
+          <h5>Rx</h5>
+          <ul>
+            {% for medicine in medicines %}
+            <li>{{medicine.name}} {{medicine.duration}} {{medicine.day_month}}</li>
+            <ol>{{medicine.dose}} {{medicine.before_after}} Meal</ol>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+          
+    </div>
+
+
+
+   </div>
+
+   
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
