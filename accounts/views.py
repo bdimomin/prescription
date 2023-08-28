@@ -66,10 +66,12 @@ def prescription(request):
     today = date.today()
     prescription= PrescriptionForm()
     prescriptions= Prescription.objects.filter(user=request.user, created_date=today)
+    doctorprofile = DoctorProfile.objects.filter(user= request.user)
     context={
         'prescription':prescription,
         'prescriptions':prescriptions,
         'profile':profile,
+        'doctorprofile':doctorprofile
        
     }
     
@@ -128,10 +130,11 @@ def prescriptions(request):
    
     context={
         'prescription':prescription,
-        'prescriptions':prescriptions
+        'prescriptions':prescriptions,
        
     }
     prescriptions= Prescription.objects.filter(user=request.user)
+   
     return render(request,'doctor/prescriptions.html', context)
 
 @login_required

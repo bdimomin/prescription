@@ -16,12 +16,16 @@
       <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-lg">Generate a Prescription</button>
     </div>
     <div class="col-md-7 offset-md-1">
+      {% if doctorprofile %}
+      
+      {% else %}
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Update your profile in the Profile section for the prescription.
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      {% endif %}
   </div>
   </div>
 </div>
