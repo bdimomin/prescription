@@ -142,7 +142,7 @@ def oneprescription(request, *args, **kwargs):
     doctor = CustomUser.objects.get(id=request.user.id)
     Doctorprofile = DoctorProfile.objects.filter(user=request.user.id)
     
-    html_string = render_to_string('doctor/prescriptionpdf2.html',{
+    html_string = render_to_string('doctor/prescriptionpdf.html',{
         "prescriptions":prescriptions,'doctor':doctor, 'medicines':medicines,'Doctorprofile':Doctorprofile})
     base_url = os.path.dirname(os.path.realpath(__file__))
     html = HTML(string=html_string,base_url=base_url)
@@ -150,7 +150,7 @@ def oneprescription(request, *args, **kwargs):
     result = html.write_pdf()
     
     response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=list_of_students.pdf'
+    response['Content-Disposition'] = 'inline; filename=prescription.pdf'
     response['Content-Transfer-Encoding'] = 'binary'
     with tempfile.NamedTemporaryFile(delete=True) as output:
         output.write(result)

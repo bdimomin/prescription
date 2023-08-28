@@ -8,11 +8,17 @@
 <br>
 <div class="container">
   <div class="row">
-    <div class="col-md-2">
-      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Generate a Prescription</button>
+    <div class="col-md-3">
+      <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-lg">Generate a Prescription</button>
     </div>
-    <div class="col-md-8">
-    </div>
+    <div class="col-md-7 offset-md-1">
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Update your profile in the Profile section for the prescription.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+  </div>
   </div>
 </div>
 <br>
@@ -21,6 +27,7 @@
   <div class="row">
       <div class="col-md-12">
           {% if prescriptions %}
+          <div class="table-responsive">
           <table class="table">
               <thead class="thead-light">
                 <tr>
@@ -46,6 +53,7 @@
                 {% endfor %}
               </tbody>
             </table>
+          </div>
             {% else %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
               Today you haven't created any prescription yet.
@@ -61,8 +69,8 @@
 
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title text-center" id="exampleModalLabel">Prescription</h5>
@@ -94,8 +102,8 @@
               {{prescription.patient_weight|as_crispy_field}}
              
           </div>
-          <div class="col-md-2 offset-md-4">
-            <button type="submit" class="btn btn-success btn-lg">Save</button>
+          <div class="col-md-4 offset-md-4">
+            <button type="submit" class="btn btn-success btn-lg">Save Prescription</button>
           </div>
          
       </div>

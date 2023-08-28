@@ -6,123 +6,94 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Prescription</title>
     <style>
-      
+        @page{
+          size:A4;
+          font-family: Gentium;
+          margin-top:3.5cm;
+          margin-bottom:0cm;
+          margin-left:0cm;
+          margin-right:1cm;
+
         
-        body {
-            font-size:11pt;
-            line-height:13pt;
-            font-family:Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif;
+          @top-center{
+            content: "Prescription Point";
+          }
         }
-        table.table-bordered, table.table-bordered>thead>tr>th, table.table-bordered>tbody>tr>td {
-            border-top-width: 1pt;
-            border-top-style: solid;
-            border-top-color: #000000;
-            border-bottom-width: 1pt;
-            border-bottom-style: solid;
-            border-bottom-color: #000000;
-            border-left-width: 1pt;
-            border-left-style: solid;
-            border-left-color: #000000;
-            border-right-width: 1pt;
-            border-right-style: solid;
-            border-right-color: #000000;
-            padding-top: 10pt;
-            padding-right: 10pt;
-            padding-bottom: 10pt;
-            padding-left: 10pt;
+        h1,h2,h3,h4,h5,p{
+          font-family: Gentium;
         }
-        .border-top {
-            border-top-width: 1pt;
-            border-top-style: solid;
-            border-top-color: #000000;
-        }
-        td th table {
-            width: 100%;
-            vertical-align: center;
-            text-align:center;
-        }
-        table {
-            margin-top:auto;
-            margin-right:auto;
-            margin-bottom:auto;
-            margin-left:auto;
-            display:block;
-        }
-        .alignleft{
-          width:100pt;
+        .doctor{
+          width:280px;
           float:left;
-          display: block;
+          font-family: Gentium;
         }
-        .alignright{
-          width: 100pt;
+        .patient{
+          width:500px;
           float:right;
-          display: block;
+          font-family: Gentium;
         }
-        
-        .alignedcenter {
-           text-align:center;
-          }
-
-        .ix{
-          background-color #030303;
+        .left{
+          width:200px;
+          float:left;
+        }
+        .right{
+          width:550px;
+          float:right;
+          font-family: Gentium;
         }
 
-        {% comment %} @page {
-          size: letter ;
-          
-          @frame col1_frame {             /* Content frame 1 */
-              left: 44pt; width: 245pt; top: 90pt; height: 632pt;
-          }
-          @frame col2_frame {             /* Content frame 2 */
-              left: 323pt; width: 245pt; top: 90pt; height: 632pt;
-          }
-         
-      } {% endcomment %}
+        .right1{
+          font-family: Gentium;
+        }
+
     </style>
 </head>
 <body>
+  {% comment %} {% if prescriptions.barcode %}
+  <img src="{{prescriptions.barcode.url}}" alt="barcode" height="80px">
+  {% endif %} {% endcomment %}
+    
    <div class="container ml-5">
     <div class="row">
-      <h1 class="text-center alignedcenter">Medicial Prescription</h1>
-
-        <div class="col-md-2"> 
+    
+       
+        <div class="doctor">
           <p>Doctor Name: {{doctor.name}}</p>
-          <p>MBBS (DU), FCPC (PG), MD ( Cardiology, USA)</p>
-        </div>
-
-        <div class="col-md-2" >
-          {% if prescriptions.barcode %}
-          <img src="{{prescriptions.barcode.path}}" alt="barcode" height="80px" align="right">
+          {% if Doctorprofile %}
+          {% for degree in Doctorprofile %}
+          <span>{{degree.degree}} ({{degree.degree_university}}) {{degree.degree_country}},</span>
+          {% endfor %}
           {% endif %}
         </div>
+        <div class="patient"> 
+          <p class="alignedcenter">Patient ID: <strong>{{prescriptions.id}}</strong>,  Patient Name: <strong>{{prescriptions.patient_name}}</strong>,
+            Age: <strong>{{prescriptions.patient_age}}</strong>, Sex: <strong>{{prescriptions.patient_sex}}</strong>,Phone: <strong>{{prescriptions.patient_mobile}}</strong></p>
+          
+
+            
+          
+        </div>
     </div>
-    <hr>
-    <p class="alignedcenter">Patient ID: <strong>{{prescriptions.id}}</strong>,  Patient Name: <strong>{{prescriptions.patient_name}}</strong>,
-      Age: <strong>{{prescriptions.patient_age}}</strong>, Sex: <strong>{{prescriptions.patient_sex}}</strong>, Phone: <strong>{{prescriptions.patient_mobile}}</strong></p>
-    <hr>
+<br>
+
+    <p class="right1">Date: {{prescriptions.created_date}}</p>
+    <br>
     <div class="row">
-      <div class="col-md-4 alignleft">
-
-        <p align="right">Date: {{prescriptions.created_date}}</p>
-
-        <h4> Disease</h4>
-        {{prescriptions.disease}}
-
-        <br>
-        <br>
-        <br>
-
-        <h4> Complaint</h4>
-
-
-        {{prescriptions.complaint}}
-
-        <br>
-        <br>
+      <div class="left">
+      <div class="col-md-3">
+        <h5> Disease</h5>
+        <p>{{prescriptions.disease}}</p>
         <br>
 
 
-        <h3>Investigations</h3>
+        <h5> Complaint</h5>
+        <p>{{prescriptions.complaint}}</p>
+
+        <br>
+
+
+
+        <h5>Investigations</h5>
         <p>BP: {{prescriptions.BP}}</p>
         <p>Pulse: {{prescriptions.Pulse}}</p>
         <p>Temp: {{prescriptions.Temp}}</p>
@@ -133,30 +104,37 @@
 
         <br>
 
-        <h4> IX</h4>
+        <h5> IX</h5>
         <p>{{prescriptions.ix}}</p>
         
        
 
       </div>
-      <div class="col-md-6">
-        <div class="col-md-8 alignright">
-          <h5>Rx</h5>
-          <ul>
-            {% for medicine in medicines %}
-            <li>{{medicine.name}} {{medicine.duration}} {{medicine.day_month}}</li>
-            <ol>{{medicine.dose}} {{medicine.before_after}} Meal</ol>
-            {% endfor %}
-          </ul>
-        </div>
+
+
+    </div>
+    <div class="right">
+      <div class="col-md-9">
+        <h5>Rx</h5>
+        
+        <ul>
+          {% for medicine in medicines %}
+          <li>{{medicine.name}} {{medicine.duration}} {{medicine.day_month}}</li>
+          <ol>{{medicine.dose}} {{medicine.before_after}} Meal</ol>
+          {% endfor %}
+        </ul>
+        
+        
+        
       </div>
-          
+    </div>
+     
+    
     </div>
 
 
-
    </div>
-
+ 
    
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
