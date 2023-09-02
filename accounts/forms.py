@@ -31,6 +31,14 @@ class PrescriptionForm(forms.ModelForm):
     class Meta:
         model=Prescription
         exclude =['user']
+        widgets = {
+            'p_id': forms.HiddenInput(attrs={'type': 'hidden'}),
+        }
+        
+
+
+
+        
         
 class PrescriptioinMedicineForm(forms.ModelForm):
     class Meta:

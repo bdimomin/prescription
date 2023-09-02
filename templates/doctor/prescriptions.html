@@ -12,10 +12,23 @@
 <br>
 <div class="container">
   <div class="row">
-    <div class="col-md-3">
-      <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-lg">Generate a Prescription</button>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-lg">New Patient</button>
+      {% comment %} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Old Patient</button> {% endcomment %}
     </div>
-    <div class="col-md-7 offset-md-1">
+    <div class="col-md-5">
+     
+
+      <form class="form-inline" method="POST" action="{% url 'prescriptionsearch' %}">
+        {% csrf_token %}
+
+        <label class="sr-only" for="inlineFormInputName2">Patient ID</label>
+        <input type="number" class="form-control mb-2 mr-sm-2" id="inlineFormInputName2" name="p_id" placeholder="Enter Patient ID">   
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+      </form>
+    </div>
+
+    <div class="col-md-5">
       {% if doctorprofile %}
       
       {% else %}
@@ -51,12 +64,13 @@
 
               {% for prescription in prescriptions %}
                 <tr>
-                  <th scope="row">{{prescription.id}}</th>
+                  <th scope="row">{{prescription.p_id}}</th>
                   <td>{{prescription.patient_name}}</td>
                   <td>{{prescription.patient_age}}</td>
                   <td>{{prescription.patient_mobile}}</td>
                   <td>{{prescription.patient_address}}</td>
-                  <td><a href="{% url 'prescriptionEdit' prescription.id %}" class="btn btn-warning">Edit</a> <a href="{% url 'oneprescription' prescription.id %}" target="_blank" class="btn btn-primary">Print</a>  </td>
+                  <td><a href="{% url 'prescriptionEdit' prescription.id %}" class="btn btn-warning">Edit</a> <a href="{% url 'oneprescription' prescription.id %}" class="btn btn-primary">View</a> 
+                    <a href="{% url 'prescriptionprint' prescription.id %}" target="_blank" class="btn btn-primary">Print</a> </td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -87,6 +101,7 @@
         </button>
       </div>
       <div class="modal-body">
+
         <form method="POST">
           {% csrf_token %}
       <div class="row">
@@ -120,6 +135,38 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group row">
+            <label for="patient_id" class="col-sm-3 col-form-label">Patient ID</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" id="patient_id" name ="patient_id" placeholder="Patient Id">
+            </div>
+          </div>
+          <div class="col-md-2 offset-md-3">
+            <button type="submit" class="btn btn-success">Search</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+       
       </div>
     </div>
   </div>

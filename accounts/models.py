@@ -74,6 +74,7 @@ class Prescription(models.Model):
         ('Female','Female'),
     )
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    p_id = models.CharField(max_length=10, blank=True, null=True)
     patient_name = models.CharField(max_length=100)
     patient_age = models.IntegerField()
     patient_sex = models.CharField(max_length=7, choices=patient_gender)
@@ -91,7 +92,7 @@ class Prescription(models.Model):
     Heart = models.CharField(blank=True, null=True,max_length=20)
     others = models.TextField(blank=True, null=True)
     ix = models.TextField(blank=True, null=True)
-    # barcode = models.ImageField(upload_to='images/', blank=True, null=True)
+   
 
     created_date=models.DateField(auto_now_add=True)
     modified_date=models.DateTimeField(auto_now=True)
@@ -99,13 +100,7 @@ class Prescription(models.Model):
     def __str__ (self):
         return self.patient_name
 
-    # def save(self, *args, **kwargs):
-    #     EAN = barcode.get_barcode_class('ean13')
-    #     ean = EAN(f'{self.patient_mobile}{self.patient_age}{self.id}', writer=ImageWriter())
-    #     buffer = BytesIO()
-    #     ean.write(buffer)
-    #     self.barcode.save(f'{self.patient_name}.png', File(buffer), save=False)
-    #     return super().save(*args, **kwargs)
+    
 
 
 class DoctorProfile(models.Model):

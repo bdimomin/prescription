@@ -30,6 +30,7 @@ def dashboard(request):
     }
     
     if request.method == 'POST':
+      
       prescription = PrescriptionForm(request.POST, instance=patient)
       if prescription.is_valid():
           prescription.instance.user = request.user
@@ -61,11 +62,144 @@ def prescriptionEdit(request, id):
     return render(request, 'doctor/dashboard.html',context)
 
 @login_required
+def oldpresscriptions(request):
+        
+        
+    if request.method == 'POST':
+        p_id = request.POST.get('p_id')
+        name = request.POST.get('name')
+        age = request.POST.get('age')
+        gender = request.POST.get('gender')
+        address = request.POST.get('address')
+        mobile = request.POST.get('mobile')
+        weight = request.POST.get('weight')
+        print(p_id, name, age, gender, address, mobile, weight)
+        user= CustomUser.objects.get(id=request.user.id)
+       
+        try:
+            Prescription.objects.create(user=user, p_id=p_id, patient_name=name, patient_age=age, patient_sex=gender, 
+                                           patient_address=address,patient_mobile=mobile,patient_weight=weight).save()
+            return redirect('dashboard')
+        except:
+            print("ERROR")
+       
+        
+    else:
+        pass
+    
+    
+    try:
+        p_id = request.POST.get('p_id')
+        profile = CustomUser.objects.get(id=request.user.id)
+        patient = Prescription.objects.filter(p_id=p_id)
+        patient_details = Prescription.objects.filter(p_id=p_id).order_by('-pk')[0]
+        patient_id=patient_details.id
+        
+    except:
+        patient_details="Not found"
+        patient_id="ID not found"
+        
+    context={
+        'patient':patient,
+        'profile':profile,
+        'patient_details':patient_details,
+        'patient_id':patient_id
+    }
+    
+    return render(request, 'doctor/oldprescriptions.html',context)
+        
+        
+       
+    
+
+
+@login_required
+def generateOldPrescription(request,p_id):
+    # prescription= Prescription.objects.filter(p_id=p_id).order_by('-pk')[0]
+    # patient_id=prescription.id
+    # print(patient_id)
+    
+    
+    if request.method == 'POST':
+        user = request.user.id
+        patient_id = request.POST.get('patient_id')
+        name = request.POST.get('name')
+        age = request.POST.get('age')
+        gender = request.POST.get('gender')
+        address = request.POST.get('address')
+        mobile= request.POST.get('mobile')
+        weight = request.POST.get('weight')
+        disease = request.POST.get('disease')
+        complaint = request.POST.get('complaint')
+        bp = request.POST.get('bp')
+        pulse = request.POST.get('pulse')
+        temp = request.POST.get('temp')
+        sp02 = request.POST.get('sp02')
+        rbs = request.POST.get('rbs')
+        heart = request.POST.get('heart')
+        others = request.POST.get('others')
+        ix = request.POST.get('ix')
+        
+        
+        prescription= Prescription.objects.get(id=patient_id)
+        
+        id = request.user
+        user= CustomUser.objects.get(id=id)
+       
+        Prescription.objects.create(user=user, p_id=patient_id, patient_name=name, patient_age=age, patient_sex=gender, 
+                                           patient_address=address,patient_mobile=mobile,patient_weight=weight,disease=disease, 
+                                           complaint=complaint,BP=bp,Pulse=pulse,Temp=temp,Sp02=sp02, 
+                                           RBS=rbs, Heart=heart,others=others,ix=ix).save()
+        return redirect('prescription')
+        
+        
+    return render(request, 'doctor/dashboard2.html', {'prescription':prescription})
+
+
+@login_required
+def oldpatient(request):
+    user = request.user.id 
+    p_id = request.POST.get('p_id')
+    prescription= Prescription.objects.filter(p_id=p_id).order_by('-pk')[0]
+    patient_id=prescription.id
+    
+    if request.method == 'POST':
+       
+        name = request.POST.get('name')
+        age = request.POST.get('age')
+        gender = request.POST.get('gender')
+        address = request.POST.get('address')
+        mobile= request.POST.get('mobile')
+        weight = request.POST.get('weight')
+        
+        user= CustomUser.objects.get(id=request.user.id)
+        
+        pres = Prescription.objects.create(user=user, p_id=p_id, patient_name=name, patient_age=age, patient_sex=gender, 
+                                            patient_address=address,patient_mobile=mobile,patient_weight=weight).save()
+
+    
+    return render(request, 'doctor/dashboard2.html', {'prescription':prescription,'patient_id':patient_id})
+
+
+@login_required
 def prescription(request):
+    
+   
     profile = CustomUser.objects.get(id=request.user.id)
-    today = date.today()
     prescription= PrescriptionForm()
-    prescriptions= Prescription.objects.filter(user=request.user, created_date=today)
+    prescriptions= Prescription.objects.filter(user=request.user, p_id__isnull=False).order_by('-id')[:5]
+    try:
+        last_id = Prescription.objects.all().order_by('-id')[0]
+        serial_id= last_id.id+1
+    except:
+        serial_id = 1
+        
+    
+    da = date.today()
+    year = da.strftime("%y")
+    month = da.strftime("%m")
+    today = da.strftime("%d")
+    unique_id= year+month+today+str(serial_id).zfill(3)
     doctorprofile = DoctorProfile.objects.filter(user= request.user)
     context={
         'prescription':prescription,
@@ -74,16 +208,28 @@ def prescription(request):
         'doctorprofile':doctorprofile
        
     }
-    
     if request.method == 'POST':
-      prescription = PrescriptionForm(request.POST)
-      if prescription.is_valid():
-          prescription.instance.user = request.user
-          prescription.save()
-          return redirect('dashboard')
-          
-        
+        prescription = PrescriptionForm(request.POST)
+        if prescription.is_valid():
+            prescription.instance.user = request.user
+            prescription.instance.p_id = unique_id
+            prescription.save()
+            return redirect('dashboard')
     return render(request, 'doctor/prescriptions.html',context)
+    
+    
+    
+    
+    
+    
+   
+        
+            
+    
+
+
+
+    
 
 def registration(request):
     if request.user.is_authenticated:
@@ -124,7 +270,7 @@ def login_view(request):
         login_form= UserLoginForm()
     return render(request,'registration/login.html',{'login_form':login_form})
 
-
+@login_required
 def prescriptions(request):
     prescription= PrescriptionForm()
    
@@ -142,10 +288,37 @@ def oneprescription(request, *args, **kwargs):
     id = kwargs.get('id')
     prescriptions= Prescription.objects.get(id=id)
     medicines = PrescriptionMedicine.objects.filter(prescription=id)
-    doctor = CustomUser.objects.get(id=request.user.id)
-    Doctorprofile = DoctorProfile.objects.filter(user=request.user.id)
+    doctor = CustomUser.objects.get(id=prescriptions.user_id)
+    Doctorprofile = DoctorProfile.objects.filter(user=prescriptions.user_id)
     
     html_string = render_to_string('doctor/prescriptionpdf.html',{
+        "prescriptions":prescriptions,'doctor':doctor, 'medicines':medicines,'Doctorprofile':Doctorprofile})
+    base_url = os.path.dirname(os.path.realpath(__file__))
+    html = HTML(string=html_string,base_url=base_url)
+    
+    result = html.write_pdf()
+    
+    response = HttpResponse(content_type='application/pdf;')
+    response['Content-Disposition'] = 'inline; filename=prescription.pdf'
+    response['Content-Transfer-Encoding'] = 'binary'
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+        output.seek(0)
+        response.write(output.read())
+
+    return response
+
+
+@login_required
+def prescriptionprint(request, *args, **kwargs):
+    id = kwargs.get('id')
+    prescriptions= Prescription.objects.get(id=id)
+    medicines = PrescriptionMedicine.objects.filter(prescription=id)
+    doctor = CustomUser.objects.get(id=prescriptions.user_id)
+    Doctorprofile = DoctorProfile.objects.filter(user=prescriptions.user_id)
+    
+    html_string = render_to_string('doctor/prescriptionpdf2.html',{
         "prescriptions":prescriptions,'doctor':doctor, 'medicines':medicines,'Doctorprofile':Doctorprofile})
     base_url = os.path.dirname(os.path.realpath(__file__))
     html = HTML(string=html_string,base_url=base_url)
@@ -204,7 +377,7 @@ def medicinesave(request):
         else:
             return JsonResponse({'status':0})
 
-
+@login_required
 def profile_view(request, id):
     profile = CustomUser.objects.get(id=id)
     form = DoctorProfileForm()
