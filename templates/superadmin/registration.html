@@ -1,0 +1,38 @@
+{% extends 'superadmin/base.html' %}
+{% block title %}Registration {% endblock title %} 
+{% load crispy_forms_tags %}
+{% block content %}
+<br>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card shadow">
+          <div class="card-body">
+            <h3 class="text-center alert alert-primary" role="alert">Registration</h3>
+            <form method="POST">
+              {% csrf_token %}
+              <div class="row">
+                  <div class="col-md-6">{{registration_form.name|as_crispy_field}} </div>
+                  <div class="col-md-6">{{registration_form.email|as_crispy_field}}</div>
+                 
+              </div>
+              <div class="row">
+                  <div class="col-md-6">{{registration_form.mobile|as_crispy_field}}</div>
+                  <div class="col-md-6">{{registration_form.amount|as_crispy_field}}</div>
+              </div>
+
+              <div class="row">
+                  <div class="col-md-4"></div>
+                  <div class="col-md-4"><button type="submit" class="btn btn-success btn-block btn-lg">Registration</button> </div>
+                  
+              </div>
+
+              
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

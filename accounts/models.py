@@ -43,7 +43,7 @@ class CustomUser(AbstractBaseUser):
 
 
     #required fields
-    date_joined = models.DateTimeField(auto_now_add=True)
+    date_joined = models.DateField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
     created_date=models.DateTimeField(auto_now_add=True)
     modified_date=models.DateTimeField(auto_now=True)
@@ -138,4 +138,61 @@ class PrescriptionMedicine(models.Model):
     def __str__(self):
         return self.name
 
+
+
+class Registration(models.Model):
+    name= models.CharField(max_length=100)
+    mobile= models.CharField(max_length=15,unique=True)
+    email= models.EmailField(max_length=100,unique=True)
+    amount = models.FloatField()
+    date = models.DateField(auto_now=True)
+    
+    def __str__(self):
+        return self.name
+class Renewal(models.Model):
+    name= models.CharField(max_length=100)
+    amount = models.FloatField()
+    date = models.DateField(auto_now=True)
+    
+    def __str__(self):
+        return self.name
+class Expenses(models.Model):
+    purposes = (
+        ('domain registration','Domain Registration'),
+        ('domain renewal', 'Domain Renewal'),
+        ('hosting registration','Hosting Registration'),
+        ('hosting renewal', 'Hosting Renewal'),
+        
+    )
+    purpose = models.CharField(max_length=50,choices=purposes)
+    amount = models.FloatField()
+    date = models.DateField(auto_now=True)
+    
+    def __str__(self):
+        return self.purpose
+    
+class SuperAdminIncomeStatement(models.Model):
+    client= models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True, blank=True, null=True)
+    purpose = models.CharField(max_length=150,null=True,blank=True)
+    amount=models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
+    
+    def __str__(self):
+        return self.client
+class SuperAdminExpenseStatement(models.Model):
+    client= models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True, blank=True, null=True)
+    purpose = models.CharField(max_length=150,null=True,blank=True)
+    amount=models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
+    
+    def __str__(self):
+        return self.client
+    
+class SMSBundle(models.Model):
+    client= models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
+    date = models.DateField(auto_now_add=True, blank=True, null=True)
+    sms_quantity=models.IntegerField(null=True, blank=True)
+    
+    def __str__(self):
+        return self.name
 

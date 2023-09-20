@@ -1,0 +1,112 @@
+
+
+
+{% extends 'superadmin/base.html' %}
+{% block title %}SMS Bundle {% endblock title %} 
+{% load crispy_forms_tags %}
+
+{% block content %}
+<br>
+
+{% if sms %}
+<div class="card mb-4 ml-4 mr-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        SMS Quantity
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Client ID</th>
+                  <th>Name</th>
+               
+                  <th>SMS Quantity</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Date</th>
+                    <th>Client ID</th>
+                    <th>Name</th>
+                  
+                    <th>SMS Quantity</th>
+                </tr>
+            </tfoot>
+            <tbody>
+              {% for message in sms %}
+              <tr>
+        
+                        <td>{{ message.date }}</td>
+                        <td>{{ message.client.id }}</td>
+                        <td>{{ message.client }}</td>
+                        <td>{{ message.sms_quantity }}</td>
+                        
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<h3 class="text-center alert alert-primary" role="alert">Currently, You don't have SMS Bunddle Record</h3>
+{% endif %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3  ml-3"><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">SMS Bundle</button></div>
+  </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      
+     <div class="container">
+      <div class="row">
+        <div class="col-md-10 offset-md-1"> 
+          <br>
+          <form method="post">
+                
+            {% csrf_token %}
+    
+            <div class="row">
+              <div class="col-md-12">{{ form.client|as_crispy_field }}</div>
+             
+            </div>
+           
+            <div class="row">
+              <div class="col-md-12">{{ form.sms_quantity|as_crispy_field }}</div>
+             
+            </div>
+            
+    
+            <br>
+            <div class="row">
+              <div class="col-md-3 offset-md-4"> <button type="submit" class="btn btn-primary">Save Invoice</button></div>
+            </div>
+           
+          </form>
+          <br>
+    
+        </div>
+      </div>
+     </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,65 @@
+{% extends 'superadmin/base.html' %}
+{% block title %}All Clients {% endblock title %} 
+{% load crispy_forms_tags %}
+{% block content %}
+<br>
+
+      <div class="card mb-4 ml-4 mr-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            All Clients
+           
+        </div>
+        <div class="card-body">
+          {% if xyz %}
+            <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Mobile</th>
+                      <th>email</th>
+                      <th>Registration Date</th>
+                      <th>No. of Patient</th>
+                      <th>Renewal Date</th>
+                   
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Mobile</th>
+                      <th>email</th>
+                      <th>Registration Date</th>
+                      <th>No. of Patient</th>
+                      <th>Renewal Date</th>
+                     
+                    </tr>
+                </tfoot>
+                <tbody>
+                  {% for clients, no_of_clients in xyz %}
+                  <tr>
+                            <td>{{clients.id}}</td>
+                            <td>{{ clients.name }}</td>
+
+                            <td>{{ clients.phone }}</td>
+
+                            <td>{{ clients.email }}</td>
+
+                            <td>{{clients.created_date|date:"d F Y" }}</td>
+                            <td> {{no_of_clients }} </td>
+
+                            <td></td>
+                            
+                          
+                  </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        </div>
+      </div>
+      {% endif %}
+      
+
+{% endblock %}

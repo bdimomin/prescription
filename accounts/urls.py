@@ -1,28 +1,42 @@
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
-from . import views
+from . views import *
 
 router = DefaultRouter()
-router.register('medicine', views.MedicineViewSet, basename='medicine')
+router.register('medicine', MedicineViewSet, basename='medicine')
 
 
 
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('', views.login_view, name="login_user"),
-    path('register/',views.registration, name="registration"),
+    path('',index,name='index'),
+    path('login/', login_view, name="login_user"),
+    path('register/',registration, name="registration"),
     # path('prescriptions/',views.prescriptions, name="prescriptions"),
-    path('<int:id>/profile/', views.profile_view, name="profile"),
-    path('prescription/<int:id>/',views.prescriptionEdit, name="prescriptionEdit"),
-    path('prescriptionpdf/<int:id>/',views.oneprescription, name="oneprescription"),
-    path('prescriptionpdfprint/<int:id>/',views.prescriptionprint, name="prescriptionprint"),
-    path('dashboard/', views.dashboard, name="dashboard"),
-    path('generateprescription/<int:p_id>/', views.generateOldPrescription, name="dashboard2"),
-    path('prescription/',views.prescription, name="prescription"),
-    path('oldhistory/', views.oldpresscriptions, name="prescriptionsearch"),
-    path('oldpatient/', views.oldpatient, name="oldpatient"),
-    path("save/", views.medicinesave, name="medicinesave"),
-    path('logout/',views.logout_user, name="logout"),
+    path('<int:id>/profile/', profile_view, name="profile"),
+    path('prescription/<int:id>/',prescriptionEdit, name="prescriptionEdit"),
+    path('prescriptionpdf/<int:id>/',oneprescription, name="oneprescription"),
+    path('prescriptionpdfprint/<int:id>/',prescriptionprint, name="prescriptionprint"),
+    path('dashboard/', dashboard, name="dashboard"),
+    path('generateprescription/<int:p_id>/', generateOldPrescription, name="dashboard2"),
+    path('prescription/',prescription, name="prescription"),
+    path('oldhistory/', oldpresscriptions, name="prescriptionsearch"),
+    path('oldpatient/', oldpatient, name="oldpatient"),
+    path("save/", medicinesave, name="medicinesave"),
+    path('logout/',logout_user, name="logout"),
+    
+    
+    path('useradmin-home/', home, name="superadminhome"),
+    path('useradmin/new-client/', new_client, name="new_client"),
+    path('useradmin/all-clients/', all_clients, name="all_clients"),
+    path('useradmin/registration/', registry, name="superadminregistration"),
+    path('useradmin/renewal/', renewal, name="renewal"),
+    path('useradmin/expenses/', expenses, name="expenses"),
+    
+    path('useradmin/income-statement/', incomestatemts, name="superadminIncomeStatement"),
+    path('useradmin/expense-statement/', expensestements, name="superadminExpenseStements"),
+    path('useradmin/balance-statement/', balancestatements, name="superadminBalanceStatement"),
+    path('useradmin/sms-bundle/', smsbundle, name="smsbundle"),
 ]
     
     

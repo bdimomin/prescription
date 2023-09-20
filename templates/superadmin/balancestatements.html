@@ -1,0 +1,68 @@
+
+
+
+{% extends 'superadmin/base.html' %}
+{% block title %}Balance Statments Statements {% endblock title %} 
+{% load crispy_forms_tags %}
+{% block content %}
+<br>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
+      <div class="card shadow">
+        <div class="card-body">
+          <h3 class="text-center alert alert-primary" role="alert">Balance Statement</h3>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                  <th colspan="3" class="text-center">Income</th>
+                  <th colspan="3" class="text-center">Expense</th>
+                
+                </tr>
+            </thead>
+            
+            <tbody>
+              <tr>
+                <th class="text-center">Date</th>
+                <th class="text-center">From</th>
+                <th class="text-center">Amount</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">From</th>
+                <th class="text-center">Amount</th>
+              </tr>
+              {% for incomeamount, expenseamount in balance %}
+              <tr>
+                        <td class="text-center">{{ incomeamount.date }}</td>
+                        <td class="text-center">{{ incomeamount.client }}</td>
+                        <td class="text-center">{{ incomeamount.amount }}</td>
+                        <td class="text-center">{{ expenseamount.date }}</td>
+                        <td class="text-center">{{ expenseamount.client }}</td>
+                        <td class="text-center">{{ expenseamount.amount }}</td>
+                        
+              </tr>
+              {% endfor %}
+
+                <tr>
+                  <th colspan="5" class="text-right">Net Balance</th>
+                  <td class="text-center">{{ netbalance }}</td>
+               </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+

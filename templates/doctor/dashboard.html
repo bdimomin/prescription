@@ -124,7 +124,7 @@
                         <td>{{medi.name}}</td>
                         <td>{{medi.dose}}</td>
                         <td>{{medi.duration}}  {{medi.day_month}}</td>
-                        <td>{{medi.before_after}} Meal </td>
+                        <td>{{medi.before_after}} </td>
                        
 
 
@@ -176,8 +176,8 @@
                             <div class="form-group">
                                 <select class="form-control" id="before_after" name="before_after">
                                     <option>Select</option>
-                                    <option value="before">Before Meal</option>
-                                    <option value="after">After Meal</option>
+                                    <option value="খাওয়ার আগে">খাওয়ার আগে</option>
+                                    <option value="খাওয়ার পরে">খাওয়ার পরে</option>
                                 </select>
                             </div>
                         
@@ -271,7 +271,7 @@
 
         for (i=0; i<medicine.length;i++){
           output+="<tr><td>"+ medicine[i].name + "</td><td>" + medicine[i].dose + "</td><td>" + 
-            medicine[i].duration +" "+ medicine[i].day_month+ "</td><td>" +medicine[i].before_after+" meal </td></tr>";      
+            medicine[i].duration +" "+ medicine[i].day_month+ "</td><td>" +medicine[i].before_after+"</td></tr>";      
           }
           $("#tbody").html(output);
           event.target.reset()

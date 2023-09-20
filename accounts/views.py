@@ -6,15 +6,49 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import login,logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
-from .forms import CustomUserForm,UserLoginForm, PrescriptionForm, PrescriptioinMedicineForm,DoctorProfileForm
-from .models import Prescription, CustomUser, Medicine, PrescriptionMedicine, DoctorProfile
 from django.template.loader import render_to_string
 from weasyprint import HTML, CSS
 import tempfile
+from django.db.models import Count
+from django.db.models import Sum
+import itertools
 from datetime import date
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.decorators import user_passes_test
 
 
+from .forms import *
+from .models import *
+
+
+def superadmin(user):
+    try:
+        return user.is_superadmin
+    except:
+        pass
+    
+def index(request):
+    return render(request,'index.html')
+
+@user_passes_test(superadmin, login_url="/login/")
+def home(request):
+    all_clients = CustomUser.objects.filter(is_superadmin=0).count()
+    # running_cases = Case.objects.filter(user=user, status='Running').count()
+    new_clients = CustomUser.objects.filter(is_superadmin=0,date_joined=date.today()).count()
+    active_clients = CustomUser.objects.filter(is_superadmin=0,is_active=1).count()
+    inactive_clients = CustomUser.objects.filter(is_superadmin=0,is_active=0).count()
+    # decided_cases = Case.objects.filter(user=user, status='Decided').count()
+    # abandoned_cases = Case.objects.filter(user=user, status='Abandoned').count()
+
+    context = {
+        'all_clients': all_clients,
+        'new_clients':new_clients,
+        'active_clients': active_clients,
+        'inactive_clients':inactive_clients
+    }
+    return render(request,'superadmin/home.html',context)
+
+    
 @login_required
 def dashboard(request):
     user = request.user
@@ -220,16 +254,6 @@ def prescription(request):
     
     
     
-    
-    
-   
-        
-            
-    
-
-
-
-    
 
 def registration(request):
     if request.user.is_authenticated:
@@ -263,7 +287,10 @@ def login_view(request):
             
             if user is not None:
                 login(request,user)
-                return redirect('prescription')
+                if request.user.is_superadmin==1:
+                    return redirect('superadminhome')
+                else:
+                    return redirect('prescription')
             else:
                 return redirect('login_user')
     else:
@@ -393,6 +420,140 @@ def profile_view(request, id):
             form.instance.user = request.user
             form.save()
     return render(request, 'doctor/doctorprofile.html', context)
+
+
+
+
+
+
+
+
+
+@user_passes_test(superadmin, login_url="/login/")
+def new_client(request):
+    context={}
+    if request.method=="POST":
+        form=CustomUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('all_clients')
+        context['register_form']=form
+    else:
+        form= CustomUserForm()
+        context['register_form']=form
+    return render(request, 'superadmin/add_client.html', context)
+
+@user_passes_test(superadmin, login_url="/login/")
+def all_clients(request):
+    clients = CustomUser.objects.filter(is_superadmin=0)
+    no_of_clients=[]
+    for client in clients:
+        abc = Prescription.objects.filter(user=client.id).values('p_id').distinct().count()
+        no_of_clients.append(abc)
+    xyz = zip(clients, no_of_clients)
+    return render(request, 'superadmin/all_clients.html',{'xyz':xyz})
+
+
+@user_passes_test(superadmin, login_url="/login/")
+def registry(request):
+    context={}
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            
+        context['registration_form']= form
+    else:
+        form = RegistrationForm()
+        context['registration_form']= form
+    return render(request, 'superadmin/registration.html', context)
+
+@user_passes_test(superadmin, login_url="/login/")
+def renewal(request):
+    context={}
+    if request.method == 'POST':
+        form = RenewalForm(request.POST)
+        if form.is_valid():
+            form.save()
+        context['renewal_form']= form
+    else:
+        form = RenewalForm()
+        context['renewal_form']= form
+    return render(request, 'superadmin/renewal.html', context)
+
+@user_passes_test(superadmin, login_url="/login/")
+def expenses(request):
+    context={}
+    if request.method == 'POST':
+        form = ExpensesForm(request.POST)
+        if form.is_valid():
+            form.save()
+        context['expenses_form']= form
+    else:
+        form = ExpensesForm()
+        context['expenses_form']= form
+    return render(request, 'superadmin/expenses.html', context)
+
+@user_passes_test(superadmin, login_url="/login/")
+def incomestatemts(request):
+    income = SuperAdminIncomeStatement.objects.all()
+    form = SuperAdminIncomeStatementForm(user=request.user)
+    if request.method =='POST':
+        client= request.POST.get('client')
+        date = request.POST.get('date')
+        purpose = request.POST.get('purpose')
+        amount = request.POST.get('amount')
+        clients = CustomUser.objects.get(id=client)
+        
+        SuperAdminIncomeStatement.objects.create(client=clients, date=date,purpose=purpose,amount=amount).save()
+        
+    return render(request,'superadmin/incomestatements.html', {'form':form,'income':income})
+
+@user_passes_test(superadmin, login_url="/login/")
+def expensestements(request):
+    expense = SuperAdminExpenseStatement.objects.all()
+    form = SuperAdminExpenseStatementForm(user=request.user)
+    if request.method =='POST':
+        client= request.POST.get('client')
+        date = request.POST.get('date')
+        purpose = request.POST.get('purpose')
+        amount = request.POST.get('amount')
+        clients = CustomUser.objects.get(id=client)
+        
+        SuperAdminExpenseStatement.objects.create(client=clients, date=date,purpose=purpose,amount=amount).save()
+        
+    return render(request,'superadmin/expensestatements.html', {'form':form,'expense':expense})
+
+
+@user_passes_test(superadmin, login_url="/login/")
+def balancestatements(request):  
+    try:
+        income = SuperAdminIncomeStatement.objects.all()
+        sumincome = SuperAdminIncomeStatement.objects.all().aggregate(sumincome=Sum('amount'))
+        expense = SuperAdminExpenseStatement.objects.all()
+        sumexpense = SuperAdminExpenseStatement.objects.all().aggregate(sumexpense=Sum('amount'))
+        netbalance= sumincome["sumincome"]-sumexpense["sumexpense"]
+        balance = itertools.zip_longest(income, expense)
+        return render(request,'superadmin/balancestatements.html', {'balance':balance,'netbalance':netbalance})
+    except:
+        return HttpResponse(" Sorry! No Data Found")
+    
+    
+    
+    
+@user_passes_test(superadmin, login_url="/login/")
+def smsbundle(request):  
+    sms = SMSBundle.objects.all()
+    form = SMSBundleForm(user=request.user)
+    if request.method =='POST':
+        client= request.POST.get('client')
+        sms_quantity = request.POST.get('sms_quantity')
+    
+        clients = CustomUser.objects.get(id=client)
+        
+        SMSBundle.objects.create(client=clients, sms_quantity=sms_quantity).save()
+        
+    return render(request,'superadmin/smsbundle.html', {'form':form,'sms':sms})
         
 
     

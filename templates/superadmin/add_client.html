@@ -1,0 +1,38 @@
+{% extends 'superadmin/base.html' %}
+{% block title %}New Client {% endblock title %} 
+{% load crispy_forms_tags %}
+{% block content %}
+<br>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card shadow">
+          <div class="card-body">
+            <h3 class="text-center alert alert-primary" role="alert">Add Client</h3>
+            <form method="POST">
+              {% csrf_token %}
+              <div class="row">
+                  <div class="col-md-4">{{register_form.name|as_crispy_field}} </div>
+                  <div class="col-md-4">{{register_form.email|as_crispy_field}}</div>
+                  <div class="col-md-4">{{register_form.phone|as_crispy_field}}</div>
+              </div>
+              <div class="row">
+                  <div class="col-md-6">{{register_form.password1|as_crispy_field}}</div>
+                  <div class="col-md-6">{{register_form.password2|as_crispy_field}}</div>
+              </div>
+
+              <div class="row">
+                  <div class="col-md-4"></div>
+                  <div class="col-md-4"><button type="submit" class="btn btn-success btn-block btn-lg">Add Client</button> </div>
+                  
+              </div>
+
+              
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
