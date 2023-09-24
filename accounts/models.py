@@ -37,9 +37,17 @@ class UserManager(BaseUserManager):
         return user
 
 class CustomUser(AbstractBaseUser):
+    STATUS = (
+        ('Active','Active'),
+        ('Inactive', 'Inactive'),
+        ('Trash','Trash'),
+        ('Terminate', 'Terminate'),
+        
+    )
     name= models.CharField(max_length=255)
     email= models.EmailField(max_length=100,unique=True)
     phone= models.CharField(max_length=15,unique=True)
+    status = models.CharField(max_length=100, choices=STATUS, default="Active", blank=True, null=True)
 
 
     #required fields
@@ -158,10 +166,10 @@ class Renewal(models.Model):
         return self.name
 class Expenses(models.Model):
     purposes = (
-        ('domain registration','Domain Registration'),
-        ('domain renewal', 'Domain Renewal'),
-        ('hosting registration','Hosting Registration'),
-        ('hosting renewal', 'Hosting Renewal'),
+        ('Domain Registration','Domain Registration'),
+        ('Domain Renewal', 'Domain Renewal'),
+        ('Hosting Registration','Hosting Registration'),
+        ('Hosting Renewal', 'Hosting Renewal'),
         
     )
     purpose = models.CharField(max_length=50,choices=purposes)

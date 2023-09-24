@@ -20,6 +20,9 @@ from django.contrib.auth.decorators import user_passes_test
 from .forms import *
 from .models import *
 
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)
+
 
 def superadmin(user):
     try:
@@ -33,23 +36,22 @@ def index(request):
 @user_passes_test(superadmin, login_url="/login/")
 def home(request):
     all_clients = CustomUser.objects.filter(is_superadmin=0).count()
-    # running_cases = Case.objects.filter(user=user, status='Running').count()
     new_clients = CustomUser.objects.filter(is_superadmin=0,date_joined=date.today()).count()
-    active_clients = CustomUser.objects.filter(is_superadmin=0,is_active=1).count()
-    inactive_clients = CustomUser.objects.filter(is_superadmin=0,is_active=0).count()
-    # decided_cases = Case.objects.filter(user=user, status='Decided').count()
-    # abandoned_cases = Case.objects.filter(user=user, status='Abandoned').count()
+    active_clients = CustomUser.objects.filter(is_superadmin=0,status="Active").count()
+    inactive_clients = CustomUser.objects.filter(is_superadmin=0,status="Inactive").count()
+    terminated_clients = CustomUser.objects.filter(is_superadmin=0,status="Terminate").count()
 
     context = {
         'all_clients': all_clients,
         'new_clients':new_clients,
         'active_clients': active_clients,
-        'inactive_clients':inactive_clients
+        'inactive_clients':inactive_clients,
+        'terminated_clients':terminated_clients,
     }
     return render(request,'superadmin/home.html',context)
 
     
-@login_required
+@login_required(login_url="/login/")
 def dashboard(request):
     user = request.user
     patient = Prescription.objects.filter(user=user).order_by('-pk')[0]
@@ -72,7 +74,8 @@ def dashboard(request):
           return redirect('prescription')
     
     return render(request, 'doctor/dashboard.html',context)
-@login_required
+
+@login_required(login_url="/login/")
 def prescriptionEdit(request, id):
     patient_id=id
     patient = Prescription.objects.get(id=patient_id)
@@ -95,7 +98,7 @@ def prescriptionEdit(request, id):
         
     return render(request, 'doctor/dashboard.html',context)
 
-@login_required
+@login_required(login_url="/login/")
 def oldpresscriptions(request):
         
         
@@ -147,7 +150,7 @@ def oldpresscriptions(request):
     
 
 
-@login_required
+@login_required(login_url="/login/")
 def generateOldPrescription(request,p_id):
     # prescription= Prescription.objects.filter(p_id=p_id).order_by('-pk')[0]
     # patient_id=prescription.id
@@ -190,7 +193,7 @@ def generateOldPrescription(request,p_id):
     return render(request, 'doctor/dashboard2.html', {'prescription':prescription})
 
 
-@login_required
+@login_required(login_url="/login/")
 def oldpatient(request):
     user = request.user.id 
     p_id = request.POST.get('p_id')
@@ -215,7 +218,7 @@ def oldpatient(request):
     return render(request, 'doctor/dashboard2.html', {'prescription':prescription,'patient_id':patient_id})
 
 
-@login_required
+@login_required(login_url="/login/")
 def prescription(request):
     
    
@@ -278,26 +281,33 @@ def login_view(request):
         return redirect('prescription') 
 
     login_form = UserLoginForm()
+    errormessage={}
     if request.method=="POST":
         login_form= UserLoginForm(request.POST)
+        
         if login_form.is_valid():
             email=request.POST['email']
             password=request.POST['password']
             user=authenticate(request,email=email,password=password)
             
             if user is not None:
-                login(request,user)
-                if request.user.is_superadmin==1:
-                    return redirect('superadminhome')
+                
+                if user.status=="Active":
+                   login(request,user)
+                   if request.user.is_superadmin==1:
+                       return redirect('superadminhome')
+                   elif request.user.status=="Active":
+                       return redirect('prescription')
                 else:
-                    return redirect('prescription')
+                    errormessage['message'] = user.status
+
             else:
                 return redirect('login_user')
     else:
         login_form= UserLoginForm()
-    return render(request,'registration/login.html',{'login_form':login_form})
+    return render(request,'registration/login.html',{'login_form':login_form,'errormessage':errormessage})
 
-@login_required
+@login_required(login_url="/login/")
 def prescriptions(request):
     prescription= PrescriptionForm()
    
@@ -310,7 +320,7 @@ def prescriptions(request):
    
     return render(request,'doctor/prescriptions.html', context)
 
-@login_required
+@login_required(login_url="/login/")
 def oneprescription(request, *args, **kwargs):
     id = kwargs.get('id')
     prescriptions= Prescription.objects.get(id=id)
@@ -337,7 +347,7 @@ def oneprescription(request, *args, **kwargs):
     return response
 
 
-@login_required
+@login_required(login_url="/login/")
 def prescriptionprint(request, *args, **kwargs):
     id = kwargs.get('id')
     prescriptions= Prescription.objects.get(id=id)
@@ -376,7 +386,7 @@ class MedicineViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ['name']
     
-@login_required
+@login_required(login_url="/login/")
 def medicinesave(request):
     if request.method == "POST":
         prescription_id = request.POST.get("patient_id")
@@ -404,7 +414,7 @@ def medicinesave(request):
         else:
             return JsonResponse({'status':0})
 
-@login_required
+@login_required(login_url="/login/")
 def profile_view(request, id):
     profile = CustomUser.objects.get(id=id)
     form = DoctorProfileForm()
@@ -446,12 +456,20 @@ def new_client(request):
 @user_passes_test(superadmin, login_url="/login/")
 def all_clients(request):
     clients = CustomUser.objects.filter(is_superadmin=0)
+    update = StatusUpdateForm()
     no_of_clients=[]
     for client in clients:
         abc = Prescription.objects.filter(user=client.id).values('p_id').distinct().count()
         no_of_clients.append(abc)
     xyz = zip(clients, no_of_clients)
-    return render(request, 'superadmin/all_clients.html',{'xyz':xyz})
+    if request.method == 'POST':
+        client_id = request.POST.get('client_id')
+        status  = request.POST.get('status')
+        user = CustomUser.objects.get(id=client_id)
+        user.status=status
+        user.save()
+        return redirect('all_clients')
+    return render(request, 'superadmin/all_clients.html',{'xyz':xyz,'update':update})
 
 
 @user_passes_test(superadmin, login_url="/login/")
@@ -461,11 +479,14 @@ def registry(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
+            return redirect('superadminregistration')
             
         context['registration_form']= form
     else:
+        registration = Registration.objects.all()
         form = RegistrationForm()
         context['registration_form']= form
+        context['registration']=registration 
     return render(request, 'superadmin/registration.html', context)
 
 @user_passes_test(superadmin, login_url="/login/")
@@ -475,10 +496,13 @@ def renewal(request):
         form = RenewalForm(request.POST)
         if form.is_valid():
             form.save()
+            return redirect('renewal')
         context['renewal_form']= form
     else:
+        renewal = Renewal.objects.all()
         form = RenewalForm()
         context['renewal_form']= form
+        context['renewal']=renewal
     return render(request, 'superadmin/renewal.html', context)
 
 @user_passes_test(superadmin, login_url="/login/")
@@ -488,10 +512,13 @@ def expenses(request):
         form = ExpensesForm(request.POST)
         if form.is_valid():
             form.save()
+            return redirect('expenses')
         context['expenses_form']= form
     else:
         form = ExpensesForm()
         context['expenses_form']= form
+        expenses = Expenses.objects.all()
+        context['expenses']= expenses
     return render(request, 'superadmin/expenses.html', context)
 
 @user_passes_test(superadmin, login_url="/login/")

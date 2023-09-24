@@ -26,7 +26,7 @@
             </div>
 
             <div class="col-xl-4 col-md-6">
-                <div class="card bg-primary text-white mb-4">
+                <div class="card bg-info text-white mb-4">
                     <div class="card-body">
                         <h1 class="display-4">{{new_clients}}</h1> 
                         New Clients
@@ -39,13 +39,13 @@
             </div>
 
             <div class="col-xl-4 col-md-6">
-                <div class="card bg-danger text-white mb-4">
+                <div class="card bg-warning text-white mb-4">
                     <div class="card-body">
                         <h1 class="display-4">{{ todays_cases }}</h1> 
                         Upcoming Renewal
                     </div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#">View Details</a>
+                        <a class="small text-white stretched-link" href="{% url 'all_clients' %}">View Details</a>
                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                     </div>
                 </div>
@@ -60,20 +60,32 @@
                         Active Clients
                     </div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#">View Details</a>
+                        <a class="small text-white stretched-link" href="{% url 'all_clients' %}">View Details</a>
                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                     </div>
                 </div>
             </div>
 
             <div class="col-xl-4 col-md-6">
-                <div class="card bg-warning text-white mb-4">
+                <div class="card bg-dark text-white mb-4">
                     <div class="card-body">
                         <h1 class="display-4">{{ inactive_clients }}</h1> 
                         Inactive Client
                     </div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#">View Details</a>
+                        <a class="small text-white stretched-link" href="{% url 'all_clients' %}">View Details</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+                <div class="card bg-danger text-white mb-4">
+                    <div class="card-body">
+                        <h1 class="display-4">{{ terminated_clients }}</h1> 
+                        Terminated Client
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="{% url 'all_clients' %}">View Details</a>
                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                     </div>
                 </div>

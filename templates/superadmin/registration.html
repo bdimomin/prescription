@@ -3,36 +3,95 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <br>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8 offset-md-2">
-        <div class="card shadow">
-          <div class="card-body">
-            <h3 class="text-center alert alert-primary" role="alert">Registration</h3>
-            <form method="POST">
-              {% csrf_token %}
-              <div class="row">
-                  <div class="col-md-6">{{registration_form.name|as_crispy_field}} </div>
-                  <div class="col-md-6">{{registration_form.email|as_crispy_field}}</div>
-                 
-              </div>
-              <div class="row">
-                  <div class="col-md-6">{{registration_form.mobile|as_crispy_field}}</div>
-                  <div class="col-md-6">{{registration_form.amount|as_crispy_field}}</div>
-              </div>
 
-              <div class="row">
-                  <div class="col-md-4"></div>
-                  <div class="col-md-4"><button type="submit" class="btn btn-success btn-block btn-lg">Registration</button> </div>
-                  
-              </div>
+{% if registration %}
+<div class="card mb-4 ml-4 mr-4">
+  <div class="card-header">
+      <i class="fas fa-table me-1"></i>
+      Registration
+     
+  </div>
+  <div class="card-body">
+      <table id="datatablesSimple">
+          <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Amount</th>
+              </tr>
+          </thead>
+          <tfoot>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Amount</th>
+              </tr>
+          </tfoot>
+          <tbody>
+            {% for regi in registration  %}
+            <tr>
+              <th scope="row">{{regi.id}}</th>
+              <td>{{regi.name}}</td>
+              <td>{{regi.mobile}}</td>
+              <td>{{regi.email}}</td>
+              <td>{{regi.amount}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+  </div>
+</div>
+{% endif %}
 
-              
-          </form>
-          </div>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3  ml-3"><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Registration Entry</button></div>
+  </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      
+     <div class="container">
+      <div class="row">
+        <div class="col-md-10 offset-md-1"> 
+          <br>
+          <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">{{registration_form.name|as_crispy_field}} </div>
+                <div class="col-md-6">{{registration_form.email|as_crispy_field}}</div>
+               
+            </div>
+            <div class="row">
+                <div class="col-md-6">{{registration_form.mobile|as_crispy_field}}</div>
+                <div class="col-md-6">{{registration_form.amount|as_crispy_field}}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4"><button type="submit" class="btn btn-success btn-block btn-lg">Registration</button> </div>
+                
+            </div>
+
+        </form>
+          <br>
+    
         </div>
       </div>
+     </div>
     </div>
   </div>
+</div>
+
+
 
 {% endblock %}

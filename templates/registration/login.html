@@ -58,6 +58,17 @@
                           </button>
                     </p>
                     {% endfor %}
+
+                    {% if errormessage %}
+                    {% for key, value  in errormessage.items %}
+                        <p class="alert alert-danger text-center" role="alert">Your account status is <b>{{ value }}</b>. Please contact site admin
+                            <button type="button" class="close" data-dismiss="alert2" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </p>
+                    {% endfor %}
+                {% endif %}
+                
                 </div>
             </div>
         </div>

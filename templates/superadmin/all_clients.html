@@ -20,9 +20,11 @@
                       <th>Mobile</th>
                       <th>email</th>
                       <th>Registration Date</th>
-                      <th>No. of Patient</th>
                       <th>Renewal Date</th>
-                   
+                      <th>No. of Clients</th>
+                      <th>Current Status</th>
+                      <th colspan="2">Action</th>
+                     
                     </tr>
                 </thead>
                 <tfoot>
@@ -32,9 +34,10 @@
                       <th>Mobile</th>
                       <th>email</th>
                       <th>Registration Date</th>
-                      <th>No. of Patient</th>
                       <th>Renewal Date</th>
-                     
+                      <th>No. of Clients</th>
+                      <th>Current Status</th>
+                      <th colspan="2">Action</th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -48,13 +51,31 @@
                             <td>{{ clients.email }}</td>
 
                             <td>{{clients.created_date|date:"d F Y" }}</td>
-                            <td> {{no_of_clients }} </td>
-
                             <td></td>
+                           
+                            <td>{{no_of_clients}}</td>
+
+                            <td>{{clients.status}}</td>
+                           
+                            <td colspan="2"> 
+                              
+                              <form method="POST">
+                                {% csrf_token %}
+                              
+                              <input type="hidden" name="client_id" value="{{clients.id}}">
+
+                              {{update|crispy}} 
+                              <input type="submit" class="btn btn-danger" value="Update">
+                            </form>
+                            </td>
                             
+                            
+
                           
                   </tr>
                   {% endfor %}
+
+                  
                 </tbody>
             </table>
         </div>

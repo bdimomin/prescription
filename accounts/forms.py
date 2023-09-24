@@ -89,3 +89,12 @@ class SMSBundleForm(forms.ModelForm):
         super(SMSBundleForm, self).__init__(**kwargs)
         if user:
             self.fields['client'].queryset =CustomUser.objects.filter(is_superadmin=0)
+            
+class StatusUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['status']
+        
+    def __init__(self, *args, **kwargs):
+        super(StatusUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['status'].label = False

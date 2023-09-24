@@ -3,19 +3,75 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <br>
+
+  {% if renewal %}
+  <div class="card mb-4 ml-4 mr-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Renewal
+       
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Amount</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Amount</th>
+                </tr>
+            </tfoot>
+            <tbody>
+              {% for renew in renewal  %}
+              <tr>
+                <th scope="row">{{renew.id}}</th>
+                <td>{{renew.date}}</td>
+                <td>{{renew.name}}</td>
+                <td>{{renew.amount}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+    </div>
+  </div>
+  {% endif %}
+
+
   <div class="container">
     <div class="row">
-      <div class="col-md-8 offset-md-2">
-        <div class="card shadow">
-          <div class="card-body">
-            <h3 class="text-center alert alert-primary" role="alert">Renewal</h3>
+      <div class="col-md-3  ml-3"><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Renewal Entry</button></div>
+    </div>
+  </div>
+  
+  
+  <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        
+       <div class="container">
+        <div class="row">
+          <div class="col-md-10 offset-md-1"> 
+            <br>
             <form method="POST">
               {% csrf_token %}
               <div class="row">
-                  <div class="col-md-6">{{renewal_form.name|as_crispy_field}} </div>
-                  <div class="col-md-6">{{renewal_form.amount|as_crispy_field}}</div>
+                  <div class="col-md-12">{{renewal_form.name|as_crispy_field}} </div>
+                  
                  
               </div>
+              <div class="row">
+                
+                <div class="col-md-12">{{renewal_form.amount|as_crispy_field}}</div>
+               
+            </div>
             
 
               <div class="row">
@@ -26,8 +82,11 @@
 
               
           </form>
+            <br>
+      
           </div>
         </div>
+       </div>
       </div>
     </div>
   </div>
