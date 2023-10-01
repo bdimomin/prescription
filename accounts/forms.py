@@ -57,6 +57,11 @@ class RenewalForm(forms.ModelForm):
         model = Renewal
         fields=['name','amount']
         
+    def __init__(self, user=None, **kwargs):
+        super(RenewalForm, self).__init__(**kwargs)
+        if user:
+            self.fields['name'].queryset =CustomUser.objects.filter(is_superadmin=0)
+        
 class ExpensesForm(forms.ModelForm):
     class Meta:
         model = Expenses

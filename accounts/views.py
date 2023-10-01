@@ -491,19 +491,16 @@ def registry(request):
 
 @user_passes_test(superadmin, login_url="/login/")
 def renewal(request):
-    context={}
     if request.method == 'POST':
-        form = RenewalForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('renewal')
-        context['renewal_form']= form
+        name= request.POST.get('name')
+        amount = request.POST.get('amount')
+        users = CustomUser.objects.get(id=name)
+        Renewal.objects.create(name=users, amount=amount).save()
+        return redirect('renewal')
     else:
+        form = RenewalForm(user=request.user)
         renewal = Renewal.objects.all()
-        form = RenewalForm()
-        context['renewal_form']= form
-        context['renewal']=renewal
-    return render(request, 'superadmin/renewal.html', context)
+    return render(request, 'superadmin/renewal.html', {'form':form,'renewal':renewal})
 
 @user_passes_test(superadmin, login_url="/login/")
 def expenses(request):

@@ -42,7 +42,6 @@ class CustomUser(AbstractBaseUser):
         ('Inactive', 'Inactive'),
         ('Trash','Trash'),
         ('Terminate', 'Terminate'),
-        
     )
     name= models.CharField(max_length=255)
     email= models.EmailField(max_length=100,unique=True)
@@ -158,12 +157,13 @@ class Registration(models.Model):
     def __str__(self):
         return self.name
 class Renewal(models.Model):
-    name= models.CharField(max_length=100)
-    amount = models.FloatField()
+    name= models.ForeignKey(CustomUser, on_delete=models.CASCADE,  blank=True, null=True)
+    amount = models.FloatField(blank=True, null=True)
     date = models.DateField(auto_now=True)
     
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name
+    
 class Expenses(models.Model):
     purposes = (
         ('Domain Registration','Domain Registration'),

@@ -32,7 +32,7 @@
             <tbody>
               {% for renew in renewal  %}
               <tr>
-                <th scope="row">{{renew.id}}</th>
+                <th scope="row">{{renew.name_id}}</th>
                 <td>{{renew.date}}</td>
                 <td>{{renew.name}}</td>
                 <td>{{renew.amount}}</td>
@@ -63,13 +63,13 @@
             <form method="POST">
               {% csrf_token %}
               <div class="row">
-                  <div class="col-md-12">{{renewal_form.name|as_crispy_field}} </div>
+                  <div class="col-md-12">{{form.name|as_crispy_field}} </div>
                   
                  
               </div>
               <div class="row">
                 
-                <div class="col-md-12">{{renewal_form.amount|as_crispy_field}}</div>
+                <div class="col-md-12">{{form.amount|as_crispy_field}}</div>
                
             </div>
             
