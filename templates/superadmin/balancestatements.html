@@ -14,6 +14,8 @@
         <div class="card-body">
           <h3 class="text-center alert alert-primary" role="alert">Balance Statement</h3>
       <div class="table-responsive">
+
+        {% if balance %}{% endif %}
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -32,6 +34,7 @@
                 <th class="text-center">From</th>
                 <th class="text-center">Amount</th>
               </tr>
+              {% if balance and netbalance %}
               {% for incomeamount, expenseamount in balance %}
               <tr>
                         <td class="text-center">{{ incomeamount.date }}</td>
@@ -48,6 +51,7 @@
                   <th colspan="5" class="text-right">Net Balance</th>
                   <td class="text-center">{{ netbalance }}</td>
                </tr>
+               {% endif %}
             </tbody>
           </table>
         </div>

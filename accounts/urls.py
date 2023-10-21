@@ -9,7 +9,7 @@ router.register('medicine', MedicineViewSet, basename='medicine')
 
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('',index,name='index'),
+    path('index/',index,name='index'),
     path('login/', login_view, name="login_user"),
     path('register/',registration, name="registration"),
     # path('prescriptions/',views.prescriptions, name="prescriptions"),
@@ -37,6 +37,19 @@ urlpatterns = [
     path('useradmin/expense-statement/', expensestements, name="superadminExpenseStements"),
     path('useradmin/balance-statement/', balancestatements, name="superadminBalanceStatement"),
     path('useradmin/sms-bundle/', smsbundle, name="smsbundle"),
+    
+    path('useradmin/homepage/', homepage, name="homepage"),
+    path('useradmin/homepage/<int:pk>/', homepageupdate, name="homepageupdate"),
+    path('useradmin/home-delete/<int:pk>/', homedelete, name="homedelete"),
+    
+    path('useradmin/about/', aboutpage, name="aboutpage"),
+    path('useradmin/about/<int:pk>/', aboutpageupdate, name="aboutpageupdate"),
+    path('useradmin/about-delete/<int:pk>/', aboutdelete, name="aboutdelete"),
+    
+    path('useradmin/pricing/', pricingpage, name="pricingpage"),
+    path('useradmin/pricing/<int:pk>/', pricingupdate, name="pricingupdate"),
+    path('useradmin/pricing-delete/<int:pk>/', pricingdelete, name="pricingdelete"),
+    
 ]
     
     

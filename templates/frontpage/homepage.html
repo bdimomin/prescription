@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock title %} 
+
+{% block content %}
+<br>
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <h3 class="text-center">{{homepage.title}}</h3>
+            {{homepage.content|safe}}
+        </div>
+    </div>
+</div>
+<br>
+<br>
+{% endblock content %}
+

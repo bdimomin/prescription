@@ -15,11 +15,25 @@
           </a>
           <div class="collapse" id="clients" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
               <nav class="sb-sidenav-menu-nested nav">
-                  <a class="nav-link" href="{% url 'new_client' %}">New Clients</a>
+                  <a class="nav-link" href="{% url 'new_client' %}">New Client</a>
                   <a class="nav-link" href="{% url 'all_clients' %}">All Clients</a>
               </nav>
           </div>
-  
+            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false" aria-controls="collapseLayouts">
+            <div class="sb-nav-link-icon"><i class="fa fa-user" aria-hidden="true"></i></div>
+            Pages
+            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse" id="pages" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <nav class="sb-sidenav-menu-nested nav">
+                    <a class="nav-link" href="{% url "homepage" %}">Home</a>
+                    <a class="nav-link" href="{% url "aboutpage" %}">About</a>
+                    <a class="nav-link" href="{% url "pricingpage" %}">Pricing</a>
+                </nav>
+            </div>
+
+
+
           <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#accounts" aria-expanded="false" aria-controls="collapseLayouts">
               <div class="sb-nav-link-icon"><i class="fa fa-university" aria-hidden="true"></i></div>
               Accounts
@@ -38,7 +52,7 @@
                   <div class="collapse" id="income" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                       <nav class="sb-sidenav-menu-nested nav">
                           <a class="nav-link" href="{% url 'superadminregistration' %}">Registration</a>
-                          <a class="nav-link" href="{% url 'renewal' %}">Renawal</a>
+                          <a class="nav-link" href="{% url 'renewal' %}">Renewal</a>
                          
                       </nav>
                   </div>
@@ -70,7 +84,7 @@
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link" href="{% url 'superadminIncomeStatement' %}">Income Statement</a>
                         <a class="nav-link" href="{% url 'superadminExpenseStements' %}">Expense Statement</a>
-                        <a class="nav-link" href="#">Upcoming Renawal</a>
+                        <a class="nav-link" href="#">Upcoming Renewal</a>
                         <a class="nav-link" href="{% url 'superadminBalanceStatement' %}">Balance Statement</a>
                        
                     </nav>

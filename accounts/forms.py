@@ -55,7 +55,7 @@ class RegistrationForm(forms.ModelForm):
 class RenewalForm(forms.ModelForm):
     class Meta:
         model = Renewal
-        fields=['name','amount']
+        fields=['name','amount','days']
         
     def __init__(self, user=None, **kwargs):
         super(RenewalForm, self).__init__(**kwargs)

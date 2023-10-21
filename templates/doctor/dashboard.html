@@ -62,6 +62,7 @@
 
 
 <br>
+{% if prescription %}
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -148,7 +149,9 @@
 
                        {% csrf_token %}
                           <div class="form-group">
+                            {% if patient_id %}
                             <input type="hidden" name="patient_id" id="patient_id" value="{{patient_id}}">
+                            {% endif %}
                           </div>
 
                             <div class="form-group ui-widget">
@@ -193,7 +196,7 @@
         </div>
     </div>
 </div>
-
+{% endif %}
 
 
 

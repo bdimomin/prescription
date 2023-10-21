@@ -5,6 +5,7 @@ import barcode
 from barcode.writer import ImageWriter
 from io import BytesIO
 from django.core.files import File
+from tinymce.models import HTMLField
 
 class UserManager(BaseUserManager):
     def create_user(self, name, email, phone, password=None):
@@ -51,6 +52,7 @@ class CustomUser(AbstractBaseUser):
 
     #required fields
     date_joined = models.DateField(auto_now_add=True)
+    renewal_date = models.DateField(blank=True, null=True)
     last_login = models.DateTimeField(auto_now_add=True)
     created_date=models.DateTimeField(auto_now_add=True)
     modified_date=models.DateTimeField(auto_now=True)
@@ -151,15 +153,16 @@ class Registration(models.Model):
     name= models.CharField(max_length=100)
     mobile= models.CharField(max_length=15,unique=True)
     email= models.EmailField(max_length=100,unique=True)
-    amount = models.FloatField()
+    amount = models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
     date = models.DateField(auto_now=True)
     
     def __str__(self):
         return self.name
 class Renewal(models.Model):
     name= models.ForeignKey(CustomUser, on_delete=models.CASCADE,  blank=True, null=True)
-    amount = models.FloatField(blank=True, null=True)
+    amount = models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
     date = models.DateField(auto_now=True)
+    days = models.DateField(blank=True, null=True)
     
     # def __str__(self):
     #     return self.name
@@ -173,7 +176,7 @@ class Expenses(models.Model):
         
     )
     purpose = models.CharField(max_length=50,choices=purposes)
-    amount = models.FloatField()
+    amount = models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
     date = models.DateField(auto_now=True)
     
     def __str__(self):
@@ -183,7 +186,7 @@ class SuperAdminIncomeStatement(models.Model):
     client= models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True, blank=True, null=True)
     purpose = models.CharField(max_length=150,null=True,blank=True)
-    amount=models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
+    amount = models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
     
     def __str__(self):
         return self.client
@@ -191,7 +194,7 @@ class SuperAdminExpenseStatement(models.Model):
     client= models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True, blank=True, null=True)
     purpose = models.CharField(max_length=150,null=True,blank=True)
-    amount=models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
+    amount = models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
     
     def __str__(self):
         return self.client
@@ -203,4 +206,26 @@ class SMSBundle(models.Model):
     
     def __str__(self):
         return self.name
+    
+
+class Homepage(models.Model):
+    title = models.CharField(max_length=255, blank=True, null= True)
+    content = HTMLField()
+    
+    def __str__(self):
+        return self.title
+class Aboutpage(models.Model):
+    title = models.CharField(max_length=255, blank=True, null= True)
+    content = HTMLField()
+    
+    def __str__(self):
+        return self.title
+    
+class Pricingpage(models.Model):
+    title = models.CharField(max_length=255, blank=True, null= True)
+    content = HTMLField()
+    
+    def __str__(self):
+        return self.title
+
 

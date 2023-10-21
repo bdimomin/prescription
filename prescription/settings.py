@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     "crispy_bootstrap4",
     'django_quill',
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'frontpage',
+    'tinymce'
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"

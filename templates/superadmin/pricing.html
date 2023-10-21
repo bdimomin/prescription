@@ -1,0 +1,67 @@
+{% extends 'superadmin/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Pricing{% endblock title %}
+}
+
+{% block content %}
+
+
+<br>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <form method="POST">
+                {% csrf_token %}
+               
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="title">
+                </div>
+
+               <textarea id="mytextarea" name="content"> </textarea>
+              
+               <button type="Submit" class="btn btn-block btn-primary">Save</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+  
+<br>
+<br>
+{% if pricing %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            
+            <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Content</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for content  in  pricing %}
+                <tr>
+                    <th scope="row">{{content.id}}</th>
+                    <td>{{content.title}}</td>
+                    <td>{{content.content|safe|truncatewords:100}}</td>
+                    <td colspan="2"> <a href="{% url "pricingupdate" content.id %}" class="btn btn-warning">Edit</a> <a href="{% url "pricingdelete" content.id %}" class="btn btn-danger">Delete </a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>  
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+  
+
+{% endblock %}

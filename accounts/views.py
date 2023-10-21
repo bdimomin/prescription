@@ -12,7 +12,7 @@ import tempfile
 from django.db.models import Count
 from django.db.models import Sum
 import itertools
-from datetime import date
+from datetime import datetime, date, timedelta 
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import user_passes_test
 
@@ -33,70 +33,84 @@ def superadmin(user):
 def index(request):
     return render(request,'index.html')
 
+
+
 @user_passes_test(superadmin, login_url="/login/")
 def home(request):
-    all_clients = CustomUser.objects.filter(is_superadmin=0).count()
-    new_clients = CustomUser.objects.filter(is_superadmin=0,date_joined=date.today()).count()
-    active_clients = CustomUser.objects.filter(is_superadmin=0,status="Active").count()
-    inactive_clients = CustomUser.objects.filter(is_superadmin=0,status="Inactive").count()
-    terminated_clients = CustomUser.objects.filter(is_superadmin=0,status="Terminate").count()
+    today = date.today()
+    last_day =date.today() + timedelta(days=30)
+    
+    try:
+        all_clients = CustomUser.objects.filter(is_superadmin=0).count()
+        new_clients = CustomUser.objects.filter(is_superadmin=0,date_joined=date.today()).count()
+        active_clients = CustomUser.objects.filter(is_superadmin=0,status="Active").count()
+        inactive_clients = CustomUser.objects.filter(is_superadmin=0,status="Inactive").count()
+        terminated_clients = CustomUser.objects.filter(is_superadmin=0,status="Terminate").count()
+        upcoming_renewal = CustomUser.objects.filter(is_superadmin=0, renewal_date__range=(today,last_day)).count()
 
-    context = {
-        'all_clients': all_clients,
-        'new_clients':new_clients,
-        'active_clients': active_clients,
-        'inactive_clients':inactive_clients,
-        'terminated_clients':terminated_clients,
-    }
-    return render(request,'superadmin/home.html',context)
-
+        context = {
+            'all_clients': all_clients,
+            'new_clients':new_clients,
+            'active_clients': active_clients,
+            'inactive_clients':inactive_clients,
+            'terminated_clients':terminated_clients,
+            'upcoming_renewal':upcoming_renewal,
+        }
+        return render(request,'superadmin/home.html',context)
+    except:
+        return render(request,'superadmin/home.html')
     
 @login_required(login_url="/login/")
 def dashboard(request):
-    user = request.user
-    patient = Prescription.objects.filter(user=user).order_by('-pk')[0]
-    patient_id=patient.id
-    prescription = PrescriptionForm(instance=patient)
-    medicine = PrescriptionMedicine.objects.filter(prescription=patient_id)
-    context={
-        'prescription':prescription,
-        'patient_id':patient_id,
-        'medicine':medicine
-       
-    }
-    
-    if request.method == 'POST':
-      
-      prescription = PrescriptionForm(request.POST, instance=patient)
-      if prescription.is_valid():
-          prescription.instance.user = request.user
-          prescription.save()
-          return redirect('prescription')
-    
-    return render(request, 'doctor/dashboard.html',context)
+    try:
+        user = request.user
+        patient = Prescription.objects.filter(user=user).order_by('-pk')[0]
+        patient_id=patient.id
+        prescription = PrescriptionForm(instance=patient)
+        medicine = PrescriptionMedicine.objects.filter(prescription=patient_id)
+        context={
+            'prescription':prescription,
+            'patient_id':patient_id,
+            'medicine':medicine
+        
+        }
+        
+        if request.method == 'POST':
+            prescription = PrescriptionForm(request.POST, instance=patient)
+            if prescription.is_valid():
+                prescription.instance.user = request.user
+                prescription.save()
+                return redirect('prescription')
+        
+        return render(request, 'doctor/dashboard.html',context)
+    except:
+        return render(request, 'doctor/dashboard.html')
 
 @login_required(login_url="/login/")
 def prescriptionEdit(request, id):
-    patient_id=id
-    patient = Prescription.objects.get(id=patient_id)
-    prescription = PrescriptionForm(instance=patient)
-    medicine = PrescriptionMedicine.objects.filter(prescription=patient_id)
-    context={
-        'prescription':prescription,
-        'patient_id':patient_id,
-        'medicine':medicine
-       
-    }
-    
-    if request.method == 'POST':
+    try:
         patient_id=id
         patient = Prescription.objects.get(id=patient_id)
-        prescription = PrescriptionForm(request.POST,instance=patient)
-        if prescription.is_valid():
-            prescription.save()
-            return redirect('prescription')
+        prescription = PrescriptionForm(instance=patient)
+        medicine = PrescriptionMedicine.objects.filter(prescription=patient_id)
+        context={
+            'prescription':prescription,
+            'patient_id':patient_id,
+            'medicine':medicine
         
-    return render(request, 'doctor/dashboard.html',context)
+        }
+        
+        if request.method == 'POST':
+            patient_id=id
+            patient = Prescription.objects.get(id=patient_id)
+            prescription = PrescriptionForm(request.POST,instance=patient)
+            if prescription.is_valid():
+                prescription.save()
+                return redirect('prescription')
+            
+        return render(request, 'doctor/dashboard.html',context)
+    except:
+        return render(request, 'doctor/dashboard.html')
 
 @login_required(login_url="/login/")
 def oldpresscriptions(request):
@@ -156,71 +170,75 @@ def generateOldPrescription(request,p_id):
     # patient_id=prescription.id
     # print(patient_id)
     
-    
-    if request.method == 'POST':
-        user = request.user.id
-        patient_id = request.POST.get('patient_id')
-        name = request.POST.get('name')
-        age = request.POST.get('age')
-        gender = request.POST.get('gender')
-        address = request.POST.get('address')
-        mobile= request.POST.get('mobile')
-        weight = request.POST.get('weight')
-        disease = request.POST.get('disease')
-        complaint = request.POST.get('complaint')
-        bp = request.POST.get('bp')
-        pulse = request.POST.get('pulse')
-        temp = request.POST.get('temp')
-        sp02 = request.POST.get('sp02')
-        rbs = request.POST.get('rbs')
-        heart = request.POST.get('heart')
-        others = request.POST.get('others')
-        ix = request.POST.get('ix')
+    try:
+        if request.method == 'POST':
+            user = request.user.id
+            patient_id = request.POST.get('patient_id')
+            name = request.POST.get('name')
+            age = request.POST.get('age')
+            gender = request.POST.get('gender')
+            address = request.POST.get('address')
+            mobile= request.POST.get('mobile')
+            weight = request.POST.get('weight')
+            disease = request.POST.get('disease')
+            complaint = request.POST.get('complaint')
+            bp = request.POST.get('bp')
+            pulse = request.POST.get('pulse')
+            temp = request.POST.get('temp')
+            sp02 = request.POST.get('sp02')
+            rbs = request.POST.get('rbs')
+            heart = request.POST.get('heart')
+            others = request.POST.get('others')
+            ix = request.POST.get('ix')
+            
+            
+            prescription= Prescription.objects.get(id=patient_id)
+            
+            id = request.user
+            user= CustomUser.objects.get(id=id)
         
-        
-        prescription= Prescription.objects.get(id=patient_id)
-        
-        id = request.user
-        user= CustomUser.objects.get(id=id)
-       
-        Prescription.objects.create(user=user, p_id=patient_id, patient_name=name, patient_age=age, patient_sex=gender, 
-                                           patient_address=address,patient_mobile=mobile,patient_weight=weight,disease=disease, 
-                                           complaint=complaint,BP=bp,Pulse=pulse,Temp=temp,Sp02=sp02, 
-                                           RBS=rbs, Heart=heart,others=others,ix=ix).save()
-        return redirect('prescription')
-        
-        
-    return render(request, 'doctor/dashboard2.html', {'prescription':prescription})
+            Prescription.objects.create(user=user, p_id=patient_id, patient_name=name, patient_age=age, patient_sex=gender, 
+                                            patient_address=address,patient_mobile=mobile,patient_weight=weight,disease=disease, 
+                                            complaint=complaint,BP=bp,Pulse=pulse,Temp=temp,Sp02=sp02, 
+                                            RBS=rbs, Heart=heart,others=others,ix=ix).save()
+            return redirect('prescription')
+            
+            
+        return render(request, 'doctor/dashboard2.html', {'prescription':prescription})
+    except:
+        return render(request, 'doctor/dashboard2.html')
 
 
 @login_required(login_url="/login/")
 def oldpatient(request):
-    user = request.user.id 
-    p_id = request.POST.get('p_id')
-    prescription= Prescription.objects.filter(p_id=p_id).order_by('-pk')[0]
-    patient_id=prescription.id
-    
-    if request.method == 'POST':
-       
-        name = request.POST.get('name')
-        age = request.POST.get('age')
-        gender = request.POST.get('gender')
-        address = request.POST.get('address')
-        mobile= request.POST.get('mobile')
-        weight = request.POST.get('weight')
+    try:
+        user = request.user.id 
+        p_id = request.POST.get('p_id')
+        prescription= Prescription.objects.filter(p_id=p_id).order_by('-pk')[0]
+        patient_id=prescription.id
         
-        user= CustomUser.objects.get(id=request.user.id)
+        if request.method == 'POST':
         
-        pres = Prescription.objects.create(user=user, p_id=p_id, patient_name=name, patient_age=age, patient_sex=gender, 
-                                            patient_address=address,patient_mobile=mobile,patient_weight=weight).save()
+            name = request.POST.get('name')
+            age = request.POST.get('age')
+            gender = request.POST.get('gender')
+            address = request.POST.get('address')
+            mobile= request.POST.get('mobile')
+            weight = request.POST.get('weight')
+            
+            user= CustomUser.objects.get(id=request.user.id)
+            
+            pres = Prescription.objects.create(user=user, p_id=p_id, patient_name=name, patient_age=age, patient_sex=gender, 
+                                                patient_address=address,patient_mobile=mobile,patient_weight=weight).save()
 
-    
-    return render(request, 'doctor/dashboard2.html', {'prescription':prescription,'patient_id':patient_id})
+        
+        return render(request, 'doctor/dashboard2.html', {'prescription':prescription,'patient_id':patient_id})
+    except:
+        return render(request, 'doctor/dashboard2.html')
 
 
 @login_required(login_url="/login/")
 def prescription(request):
-    
    
     profile = CustomUser.objects.get(id=request.user.id)
     prescription= PrescriptionForm()
@@ -494,13 +512,23 @@ def renewal(request):
     if request.method == 'POST':
         name= request.POST.get('name')
         amount = request.POST.get('amount')
+        one = request.POST.get('days')
+        next_renew = date.today() + timedelta(days=int(one))
+        
         users = CustomUser.objects.get(id=name)
-        Renewal.objects.create(name=users, amount=amount).save()
+        users.renewal_date= next_renew
+        users.save()
+        
+        Renewal.objects.create(name=users, amount=amount, days=next_renew).save()
         return redirect('renewal')
     else:
+        today = date.today()
+        last_day =date.today() + timedelta(days=30) 
         form = RenewalForm(user=request.user)
         renewal = Renewal.objects.all()
-    return render(request, 'superadmin/renewal.html', {'form':form,'renewal':renewal})
+        upcoming_renewal = CustomUser.objects.filter(is_superadmin=0, renewal_date__range=(today,last_day))
+        
+    return render(request, 'superadmin/renewal.html', {'form':form,'renewal':renewal,'upcoming_renewal':upcoming_renewal})
 
 @user_passes_test(superadmin, login_url="/login/")
 def expenses(request):
@@ -560,7 +588,7 @@ def balancestatements(request):
         balance = itertools.zip_longest(income, expense)
         return render(request,'superadmin/balancestatements.html', {'balance':balance,'netbalance':netbalance})
     except:
-        return HttpResponse(" Sorry! No Data Found")
+        return render(request,'superadmin/balancestatements.html')
     
     
     
@@ -581,4 +609,106 @@ def smsbundle(request):
         
 
     
+
+@user_passes_test(superadmin, login_url="/login/")
+def homepage(request):
+    if request.method =='POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        Homepage.objects.create(title=title, content=content).save()
+        return redirect("homepage")
+    else:
+        homepage = Homepage.objects.all().order_by('-id')
+    return render(request, 'superadmin/homepage.html',{'homepage':homepage})
+
+
+@user_passes_test(superadmin, login_url="/login/")
+def homepageupdate(request,pk):
+    if request.method =='POST':
+        homepage = Homepage.objects.get(id=pk)
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        homepage.title = title
+        homepage.content = content
+        homepage.save()
+        return redirect("homepage")
+    else:
+        homepage = Homepage.objects.get(id=pk)
+    return render(request, 'superadmin/homepageupdate.html',{'homepage':homepage})
+
+@user_passes_test(superadmin, login_url="/login/")
+def homedelete(request,pk):
+    homepage = Homepage.objects.get(id=pk)
+    homepage.delete()
+    return redirect("homepage")
+
+
+@user_passes_test(superadmin, login_url="/login/")
+def aboutpage(request):
+    if request.method =='POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        Aboutpage.objects.create(title=title, content=content).save()
+        return redirect("aboutpage")
+    else:
+        about = Aboutpage.objects.all().order_by('-id')
+    return render(request, 'superadmin/about.html',{'about':about})
+
+
+@user_passes_test(superadmin, login_url="/login/")
+def aboutpageupdate(request,pk):
+    if request.method =='POST':
+        aboutpage = Aboutpage.objects.get(id=pk)
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        aboutpage.title = title
+        aboutpage.content = content
+        aboutpage.save()
+        return redirect("aboutpage")
+    else:
+        aboutpage = Aboutpage.objects.get(id=pk)
+    return render(request, 'superadmin/aboutpageupdate.html',{'aboutpage':aboutpage})
+
+@user_passes_test(superadmin, login_url="/login/")
+def aboutdelete(request,pk):
+    aboutpage = Aboutpage.objects.get(id=pk)
+    aboutpage.delete()
+    return redirect("aboutpage")
+
+
+
+@user_passes_test(superadmin, login_url="/login/")
+def pricingpage(request):
+    if request.method =='POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        Pricingpage.objects.create(title=title, content=content).save()
+        return redirect('pricingpage')
+    else:
+        pricing = Pricingpage.objects.all().order_by('-id')
+    return render(request, 'superadmin/pricing.html',{'pricing':pricing})
+
+@user_passes_test(superadmin, login_url="/login/")
+def pricingupdate(request,pk):
+    if request.method =='POST':
+        pricing = Pricingpage.objects.get(id=pk)
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        pricing.title = title
+        pricing.content = content
+        pricing.save()
+        return redirect("pricingpage")
+    else:
+        pricing = Pricingpage.objects.get(id=pk)
+    return render(request, 'superadmin/pricingupdate.html',{'pricing':pricing})
+
+@user_passes_test(superadmin, login_url="/login/")
+def pricingdelete(request,pk):
+    pricing = Pricingpage.objects.get(id=pk)
+    pricing.delete()
+    return redirect("pricingpage")
+
+
+
+
 

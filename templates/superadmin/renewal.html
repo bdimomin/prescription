@@ -4,6 +4,51 @@
 {% block content %}
 <br>
 
+
+
+  {% if upcoming_renewal %}
+  <div class="card mb-4 ml-4 mr-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Upcoming Renewal
+       
+    </div>
+    <div class="table-responsive">
+      <table class="table">
+            <thead>
+                <tr>
+                  
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Registration</th>
+                  <th scope="col">Expire Date</th>
+                </tr>
+            </thead>
+           
+            <tbody>
+              {% for renew in upcoming_renewal  %}
+              <tr>
+                <th scope="row">{{renew.name}}</th>
+                <td>{{renew.email}}</td>
+                <td>{{renew.phone}}</td>
+                <td>{{renew.date_joined}}</td>
+                <td>{{renew.renewal_date}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3  ml-3"><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Renewal Entry</button></div>
+    </div>
+  </div>
+  <br>
+  
   {% if renewal %}
   <div class="card mb-4 ml-4 mr-4">
     <div class="card-header">
@@ -19,6 +64,7 @@
                   <th scope="col">Date</th>
                   <th scope="col">Name</th>
                   <th scope="col">Amount</th>
+                  <th scope="col">Next Renewal Date</th>
                 </tr>
             </thead>
             <tfoot>
@@ -27,15 +73,17 @@
                   <th scope="col">Date</th>
                   <th scope="col">Name</th>
                   <th scope="col">Amount</th>
+                  <th scope="col"> Next Renewal Date</th>
                 </tr>
             </tfoot>
             <tbody>
               {% for renew in renewal  %}
               <tr>
-                <th scope="row">{{renew.name_id}}</th>
+                <th scope="row">{{renew.id}}</th>
                 <td>{{renew.date}}</td>
                 <td>{{renew.name}}</td>
                 <td>{{renew.amount}}</td>
+                <td>{{renew.days}}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -45,11 +93,7 @@
   {% endif %}
 
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3  ml-3"><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Renewal Entry</button></div>
-    </div>
-  </div>
+ 
   
   
   <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -70,6 +114,11 @@
               <div class="row">
                 
                 <div class="col-md-12">{{form.amount|as_crispy_field}}</div>
+               
+            </div>
+              <div class="row">
+                
+                <div class="col-md-12">{{form.days|as_crispy_field}}</div>
                
             </div>
             
