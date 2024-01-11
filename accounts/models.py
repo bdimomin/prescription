@@ -189,7 +189,7 @@ class SuperAdminIncomeStatement(models.Model):
     amount = models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
     
     def __str__(self):
-        return self.client
+        return self.purpose
 class SuperAdminExpenseStatement(models.Model):
     client= models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True, blank=True, null=True)
@@ -197,7 +197,7 @@ class SuperAdminExpenseStatement(models.Model):
     amount = models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
     
     def __str__(self):
-        return self.client
+        return self.purpose
     
 class SMSBundle(models.Model):
     client= models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
