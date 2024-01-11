@@ -84,12 +84,12 @@ class Prescription(models.Model):
     )
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     p_id = models.CharField(max_length=10, blank=True, null=True)
-    patient_name = models.CharField(max_length=100)
-    patient_age = models.IntegerField()
-    patient_sex = models.CharField(max_length=7, choices=patient_gender)
-    patient_address = models.CharField(max_length=255)
-    patient_mobile = models.CharField(max_length=15)
-    patient_weight = models.CharField(max_length=10,null=True, blank=True)
+    patient_Name = models.CharField(max_length=100) 
+    patient_Age = models.IntegerField()
+    patient_Sex = models.CharField(max_length=7, choices=patient_gender)
+    patient_Address = models.CharField(max_length=255)
+    patient_Mobile = models.CharField(max_length=15)
+    patient_Weight = models.CharField(max_length=10,null=True, blank=True)
 
     disease = models.CharField(max_length=155, blank=True, null=True)
     complaint     = models.TextField(blank=True, null=True)
@@ -189,7 +189,8 @@ class SuperAdminIncomeStatement(models.Model):
     amount = models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
     
     def __str__(self):
-        return self.client
+        return self.purpose
+    
 class SuperAdminExpenseStatement(models.Model):
     client= models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True, blank=True, null=True)
@@ -197,7 +198,7 @@ class SuperAdminExpenseStatement(models.Model):
     amount = models.DecimalField(max_digits=19, decimal_places=2,blank=True, null=True)
     
     def __str__(self):
-        return self.client
+        return self.purpose
     
 class SMSBundle(models.Model):
     client= models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
