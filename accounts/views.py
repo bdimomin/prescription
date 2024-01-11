@@ -124,7 +124,7 @@ def oldpresscriptions(request):
         address = request.POST.get('address')
         mobile = request.POST.get('mobile')
         weight = request.POST.get('weight')
-        
+        print(p_id, name, age, gender, address, mobile, weight)
         user= CustomUser.objects.get(id=request.user.id)
        
         try:
@@ -549,7 +549,6 @@ def expenses(request):
 @user_passes_test(superadmin, login_url="/login/")
 def incomestatemts(request):
     income = SuperAdminIncomeStatement.objects.all()
-    sumincome = SuperAdminIncomeStatement.objects.all().aggregate(sumincome=Sum('amount'))
     form = SuperAdminIncomeStatementForm(user=request.user)
     if request.method =='POST':
         client= request.POST.get('client')
@@ -560,12 +559,11 @@ def incomestatemts(request):
         
         SuperAdminIncomeStatement.objects.create(client=clients, date=date,purpose=purpose,amount=amount).save()
         
-    return render(request,'superadmin/incomestatements.html', {'form':form,'income':income,'sumincome':sumincome})
+    return render(request,'superadmin/incomestatements.html', {'form':form,'income':income})
 
 @user_passes_test(superadmin, login_url="/login/")
 def expensestements(request):
     expense = SuperAdminExpenseStatement.objects.all()
-    sumexpense = SuperAdminExpenseStatement.objects.all().aggregate(sumexpense=Sum('amount'))
     form = SuperAdminExpenseStatementForm(user=request.user)
     if request.method =='POST':
         client= request.POST.get('client')
@@ -576,7 +574,7 @@ def expensestements(request):
         
         SuperAdminExpenseStatement.objects.create(client=clients, date=date,purpose=purpose,amount=amount).save()
         
-    return render(request,'superadmin/expensestatements.html', {'form':form,'expense':expense,'sumexpense':sumexpense})
+    return render(request,'superadmin/expensestatements.html', {'form':form,'expense':expense})
 
 
 @user_passes_test(superadmin, login_url="/login/")
@@ -711,35 +709,6 @@ def pricingdelete(request,pk):
     return redirect("pricingpage")
 
 
-@user_passes_test(superadmin, login_url="/login/")
-def incomesearchingpage(request):
-    if request.method =="POST":
-        fromdate = request.POST.get('fromdate')
-        todate = request.POST.get('todate')
-        try:
-            rangevalues=SuperAdminIncomeStatement.objects.filter(date__range=[fromdate,todate]).values()
-            sumincome = SuperAdminIncomeStatement.objects.filter(date__range=[fromdate,todate]).values().aggregate(sumincome=Sum('amount'))
-            return render(request,'superadmin/searchincome.html',{'rangevalues':rangevalues,'sumincome':sumincome})
-        except:
-            print("date range not found")
-        return render(request,'superadmin/searchincome.html')
-            
-        
-    
-@user_passes_test(superadmin, login_url="/login/")
-def expensesearchingpage(request):
-    if request.method =="POST":
-        fromdate = request.POST.get('fromdate')
-        todate = request.POST.get('todate')
-        try:
-            rangevalues=SuperAdminExpenseStatement.objects.filter(date__range=[fromdate,todate]).values()
-            sumexpense = SuperAdminExpenseStatement.objects.filter(date__range=[fromdate,todate]).values().aggregate(sumexpense=Sum('amount'))
-            return render(request,'superadmin/searchexpense.html',{'rangevalues':rangevalues,'sumexpense':sumexpense})
-        except:
-            print("date range not found")
-            
-        return render(request,'superadmin/searchexpense.html')
-            
 
 
 

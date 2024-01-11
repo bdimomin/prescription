@@ -6,90 +6,9 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-
-
-
 <br>
 
-
 {% if expense %}
-<div class="container">
-  <div class="row">
-    <div class="col-md-10 offset-md-1">
-
-      <div class="card">
-        <h5 class="card-header text-center">Search by date</h5>
-        <div class="card-body">
-          <form method="POST" action="{% url "expensesearchingpage" %}">
-            {% csrf_token %}
-            <div class="row">
-              <div class="col-5">
-                From: <input type="date" class="form-control"  width="276" name="fromdate" />
-              </div>
-              <div class="col-5">
-                To: <input type="date"  class="form-control"  width="276" name="todate" />
-              </div>
-              <div class="col-2">
-                <br>
-                <button type="submit" class="btn btn-primary mb-2">Submit</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <br>
-      <div class="card">
-        <h5 class="card-header text-center">Expense Statement</h5>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Date</th>
-                  <th scope="col">From </th>
-                  <th scope="col">Purpose</th>
-                  <th scope="col">Amount</th>
-                
-                </tr>
-              </thead>
-              <tbody>
-                {% for expenseamount in expense %}
-                <tr>
-            
-                          <td>{{ expenseamount.date }}</td>
-                          <td>{{ expenseamount.client }}</td>
-                          <td>{{ expenseamount.purpose }}</td>
-                          <td>{{ expenseamount.amount }}</td>
-                          
-                          
-                </tr>
-              
-                {% endfor %}
-                <tr>
-                  <th colspan="3" class="text-center">Total Amount</th>
-                  <td class="text-left"> {{ sumexpense.sumexpense }} </td>
-              </tr>
-              
-              </tbody>
-            </table>
-          </div>
-       </div>
-      </div>
-
-
-        
-    </div>
-  </div>
-</div>
-{% else %}
-<h3 class="text-center alert alert-primary" role="alert">Currently, You don't have any expense statement</h3>
-{% endif %} 
-
-
-
-
-{% comment %} {% if expense %}
 <div class="card mb-4 ml-4 mr-4">
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
@@ -130,12 +49,12 @@
 </div>
 {% else %}
 <h3 class="text-center alert alert-primary" role="alert">Currently, You don't have any expense statement</h3>
-{% endif %} {% endcomment %}
+{% endif %}
 
 
 <div class="container">
   <div class="row">
-    <div class="col-md-3  offset-md-1"><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Create Expense Statements</button></div>
+    <div class="col-md-3  ml-3"><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Create Expense Statements</button></div>
   </div>
 </div>
 

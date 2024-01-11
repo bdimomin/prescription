@@ -50,10 +50,6 @@ urlpatterns = [
     path('useradmin/pricing/<int:pk>/', pricingupdate, name="pricingupdate"),
     path('useradmin/pricing-delete/<int:pk>/', pricingdelete, name="pricingdelete"),
     
-    
-    path('useradmin/income-searching/', incomesearchingpage, name="incomesearchingpage"),
-    path('useradmin/expense-searching/', expensesearchingpage, name="expensesearchingpage"),
-    
 ]
     
     

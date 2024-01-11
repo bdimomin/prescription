@@ -65,10 +65,10 @@
               {% for prescription in prescriptions %}
                 <tr>
                   <th scope="row">{{prescription.p_id}}</th>
-                  <td>{{prescription.patient_Name}}</td>
-                  <td>{{prescription.patient_Age}}</td>
-                  <td>{{prescription.patient_Mobile}}</td>
-                  <td>{{prescription.patient_Address}}</td>
+                  <td>{{prescription.patient_name}}</td>
+                  <td>{{prescription.patient_age}}</td>
+                  <td>{{prescription.patient_mobile}}</td>
+                  <td>{{prescription.patient_address}}</td>
                   <td><a href="{% url 'prescriptionEdit' prescription.id %}" class="btn btn-warning">Edit</a> <a href="{% url 'oneprescription' prescription.id %}" class="btn btn-primary">View</a> 
                     <a href="{% url 'prescriptionprint' prescription.id %}" target="_blank" class="btn btn-primary">Print</a> </td>
                 </tr>
@@ -107,22 +107,22 @@
       <div class="row">
           <div class="col-md-6">
               {{ request.CustomUser }}
-              {{prescription.patient_Name|as_crispy_field}}
+              {{prescription.patient_name|as_crispy_field}}
           </div>
           <div class="col-md-6">
-              {{prescription.patient_Age|as_crispy_field}}
+              {{prescription.patient_age|as_crispy_field}}
           </div>
           <div class="col-md-6">
-              {{prescription.patient_Sex|as_crispy_field}}
+              {{prescription.patient_sex|as_crispy_field}}
           </div>
           <div class="col-md-6">
-              {{prescription.patient_Address|as_crispy_field}}
+              {{prescription.patient_address|as_crispy_field}}
           </div>
           <div class="col-md-6">
-              {{prescription.patient_Mobile|as_crispy_field}}
+              {{prescription.patient_mobile|as_crispy_field}}
           </div>
           <div class="col-md-6">
-              {{prescription.patient_Weight|as_crispy_field}}
+              {{prescription.patient_weight|as_crispy_field}}
              
           </div>
           <div class="col-md-4 offset-md-4">
